@@ -45,7 +45,6 @@ namespace SkiingGame
                 if (particleList[particle].Lifetime <= 0)
                 {
                     particleList[particle] = null;
-                    //particle--;
                 }
             }
         }
@@ -62,20 +61,20 @@ namespace SkiingGame
                         (float)random.NextDouble(),
                         (float)random.NextDouble());
             float size = 0.4f;
-            int ttl = particleLife + random.Next(40);
+            int lifetime = particleLife + random.Next(40);
 
-            return new Particle(texture, position, velocity, angle, angularVelocity, color, size, ttl);
+            return new Particle(texture, position, velocity, angle, angularVelocity, color, size, lifetime);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            //spriteBatch.Begin();
-            for (int index = 0; index < maxparticles; index++)
+            
+            for (int i = 0; i < maxparticles; i++)
             {
-                if(particleList[index] != null)
-                particleList[index].Draw(spriteBatch);
+                if(particleList[i] != null)
+                particleList[i].Draw(spriteBatch);
             }
-            //spriteBatch.End();
+            
         }
     }
 }

@@ -42,7 +42,7 @@ namespace SkiingGame
         }
         public void Collision(PhysicsObject Obj1, PhysicsObject Obj2)//override this
         {
-            Obj1.Position += new Vector2(0, -2);
+            
         }
     }
 }

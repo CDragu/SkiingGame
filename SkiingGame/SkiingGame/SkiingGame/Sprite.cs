@@ -135,8 +135,9 @@ namespace SkiingGame
             this.scale = info.scale;
             this.rotation = info.rotation;
         }
-        //Animation Stuff
-        
+        /// <summary>
+        /// Animation
+        /// </summary>        
         private int currentFrame = 0;
         private int spriteWidth = 32;
         private int spriteHeight = 48;
@@ -158,13 +159,7 @@ namespace SkiingGame
             this.spriteSpeed = spriteSpeed;
             this.frameduration = frameduration;
         }
-        /// <summary>
-        /// Runs an animation that takes totalduration frames and starts form starting frame. frameduratin is for time
-        /// </summary>
-        /// <param name="startingframe"></param>
-        /// <param name="totalduration"></param>
-        /// <param name="frameduration"></param>
-        public void RunAnimation(int startingframe ,int totalduration, float frameduration)
+        public void RunAnimation(int startingframe ,int totalduration, float frameduration)// Runs an animation that takes totalduration frames and starts form starting frame. frameduratin is for time
         {
             time = time + 0.16f;//to do: change to time till last update
             if(currentFrame < startingframe)
@@ -200,9 +195,9 @@ namespace SkiingGame
                 spriteBatch.Draw(Children.texture, ChildPosition, Children.sourceRect, Color.White * Children.transparency, Children.rotation, Vector2.Zero, Children.scale, SpriteEffects.None, 0f);
             }
         }
-        ///
-        ///Audio Stuff
-        ///
+        /// <summary>
+        /// Sound
+        /// </summary>
         SoundEffectInstance soundEffectInstance;
         AudioEmitter emitter = new AudioEmitter();
         AudioListener listener = new AudioListener();

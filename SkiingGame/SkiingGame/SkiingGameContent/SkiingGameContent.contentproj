@@ -48,13 +48,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="knightspritesheet.png">
-      <Name>knightspritesheet</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="buzz.wav">
       <Name>buzz</Name>
       <Importer>WavImporter</Importer>

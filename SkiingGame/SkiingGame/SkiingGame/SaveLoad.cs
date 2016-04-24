@@ -20,7 +20,11 @@ namespace SkiingGame
         string filename = "mysave.sav";
         PlayField field;
         List<Sprite.Info> Innerspritelist = new List<Sprite.Info>();
-
+        /// <summary>
+        /// Save the Game
+        /// </summary>
+        /// <param name="field"></param>
+        /// <param name="action"></param>
         public SaveLoad(PlayField field, string action)
         {
             this.field = field;

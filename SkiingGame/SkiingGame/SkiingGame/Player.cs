@@ -21,8 +21,6 @@ namespace SkiingGame
             field.Addtoplayfield(this);
             
         }
-
-
         public override void Reset(RunSequence game) { }
 
         public override void Update()
