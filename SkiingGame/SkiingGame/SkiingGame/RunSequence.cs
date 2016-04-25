@@ -18,6 +18,15 @@ namespace SkiingGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        enum GameState
+        {
+            Start,
+            Atract,
+            Pause,
+            GameOver,
+            Game,
+        }
+        int currentGameState;
 
         Texture2D flagRighttexture;
         Texture2D flagLefttexture;
@@ -28,6 +37,11 @@ namespace SkiingGame
         SoundEffect soundEffect;
         SoundEffectInstance soundEffectInstance;
 
+        /// <summary>
+        /// Menus
+        /// </summary>
+        Buttons StartButton;
+        Texture2D startButtonTexture;
 
         public PlayField field;
 
@@ -49,14 +63,19 @@ namespace SkiingGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             field = new PlayField();
-
+            //Objects
             flagRighttexture = Content.Load<Texture2D>("LeftBlueflag");
             flagLefttexture = Content.Load<Texture2D>("leftRedFlag");
             skyMantexture = Content.Load<Texture2D>("Skier");
-            
+            //Sounds
             soundfile = TitleContainer.OpenStream(@"Content\buzz.wav");
             soundEffect = SoundEffect.FromStream(soundfile);
-            soundEffectInstance = soundEffect.CreateInstance();            
+            soundEffectInstance = soundEffect.CreateInstance();
+
+            //Buttons
+            startButtonTexture = Content.Load<Texture2D>("StartButton");
+            StartButton = new Buttons(new Vector2(100,100), 1, startButtonTexture, 0, 0, field,true);//temporal
+            currentGameState = (int)GameState.Start;           
         }
 
        
@@ -70,16 +89,40 @@ namespace SkiingGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
             KeyboardState keyboard = Keyboard.GetState();            
+            if(currentGameState == (int)GameState.Start)
+            {
+                StartButton.Isvisible = true;
+                if(StartButton.IsPressed() == true)
+                {
+                    currentGameState = (int)GameState.Game;
+                }
+            }
+            if (currentGameState == (int)GameState.Atract)
+            {
 
+            }
+            if (currentGameState == (int)GameState.Game)
+            {
+
+            }
+            if (currentGameState == (int)GameState.Pause)
+            {
+
+            }
+            if (currentGameState == (int)GameState.GameOver)
+            {
+
+            }
             base.Update(gameTime);
         }
 
        
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.White);
+
             spriteBatch.Begin();
-           
+            StartButton.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
