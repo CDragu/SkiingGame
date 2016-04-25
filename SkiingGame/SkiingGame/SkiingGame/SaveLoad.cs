@@ -13,7 +13,7 @@ using System.Diagnostics;
 
 namespace SkiingGame
 {
-    class SaveLoad
+    public class SaveLoad
     {
         StorageDevice device;
         string containerName = "MyGamesStorage";

@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Storage;
 using System.IO;
+using System.Diagnostics;
 
 namespace SkiingGame
 {
@@ -18,6 +19,7 @@ namespace SkiingGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        
         enum GameState
         {
             Start,
@@ -26,7 +28,7 @@ namespace SkiingGame
             GameOver,
             Game,
         }
-        int currentGameState;
+        public int currentGameState;
 
         Texture2D flagRighttexture;
         Texture2D flagLefttexture;
@@ -39,9 +41,21 @@ namespace SkiingGame
 
         /// <summary>
         /// Menus
-        /// </summary>
-        Buttons StartButton;
+        /// </summary>        
         Texture2D startButtonTexture;
+        Texture2D ResumeButtonTexture;
+        Texture2D BackToStartButtonTexture;
+        Texture2D SaveButtonTexture;
+        Texture2D LoadButtonTexture;
+        Texture2D EnterButtonTexture;
+
+        Buttons StartButton;
+        Buttons ResumeButton;
+        Buttons BackToStartButton;
+        Buttons Save;
+        Buttons Load;
+        Buttons Enter;
+        float timer;
 
         public PlayField field;
 
@@ -49,11 +63,15 @@ namespace SkiingGame
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            this.IsMouseVisible = true;
+            graphics.PreferredBackBufferWidth = 272;
+            graphics.PreferredBackBufferHeight = 480;
         }
 
        
         protected override void Initialize()
-        {           
+        {
+            
             base.Initialize();
         }
 
@@ -74,7 +92,19 @@ namespace SkiingGame
 
             //Buttons
             startButtonTexture = Content.Load<Texture2D>("StartButton");
-            StartButton = new Buttons(new Vector2(100,100), 1, startButtonTexture, 0, 0, field,true);//temporal
+            ResumeButtonTexture = Content.Load<Texture2D>("StartButton");
+            BackToStartButtonTexture = Content.Load<Texture2D>("StartButton");
+            SaveButtonTexture = Content.Load<Texture2D>("StartButton");
+            LoadButtonTexture = Content.Load<Texture2D>("StartButton");
+            EnterButtonTexture = Content.Load<Texture2D>("StartButton");
+
+            StartButton = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, true);
+            ResumeButton = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, false);
+            BackToStartButton = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, false);
+            Save = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, false);
+            Load = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, false);
+            Enter = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, false);
+
             currentGameState = (int)GameState.Start;           
         }
 
@@ -85,29 +115,71 @@ namespace SkiingGame
 
        
         protected override void Update(GameTime gameTime)
-        {           
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
-            KeyboardState keyboard = Keyboard.GetState();            
-            if(currentGameState == (int)GameState.Start)
+        {
+            timer += 0.16f;//to be changed
+            GraphicsDevice.Clear(Color.Black);
+            KeyboardState keyboard = Keyboard.GetState();
+            MouseState mouse = Mouse.GetState();
+
+
+            if (currentGameState == (int)GameState.Start)
             {
+                GraphicsDevice.Clear(Color.Black);
                 StartButton.Isvisible = true;
-                if(StartButton.IsPressed() == true)
+                if (StartButton.IsPressed(mouse) == true)
                 {
                     currentGameState = (int)GameState.Game;
+                    Debug.Write("yes");
+                } else if (timer > 50)
+                {
+                    currentGameState = (int)GameState.Atract;
                 }
             }
             if (currentGameState == (int)GameState.Atract)
             {
+                GraphicsDevice.Clear(Color.White);
+                StartButton.Isvisible = false;
+                if(keyboard.IsKeyDown(Keys.Space))
+                {
+                    currentGameState = (int)GameState.Start;
+                    timer = 0;
+                    Debug.Write("yes");
+                }
 
             }
             if (currentGameState == (int)GameState.Game)
             {
-
+                GraphicsDevice.Clear(Color.White);
+                StartButton.Isvisible = false;
+                if (keyboard.IsKeyDown(Keys.Escape))
+                {
+                    currentGameState = (int)GameState.Pause;
+                }
             }
             if (currentGameState == (int)GameState.Pause)
             {
-
+                Save.Isvisible = true;
+                Load.Isvisible = true;
+                ResumeButton.Isvisible = true;
+                BackToStartButton.Isvisible = true;
+                if (Save.IsPressed(mouse) == true)
+                {
+                    SaveLoad save = new SaveLoad(field, "SAVE");
+                }
+                if (Load.IsPressed(mouse) == true)
+                {
+                    SaveLoad load = new SaveLoad(field, "LOAD");
+                    field = load.AfterLoad();
+                }
+                if (ResumeButton.IsPressed(mouse) == true)
+                {
+                    currentGameState = (int)GameState.Game;
+                }
+                if (BackToStartButton.IsPressed(mouse) == true)
+                {
+                    currentGameState = (int)GameState.Start;
+                    timer = 0;
+                }
             }
             if (currentGameState == (int)GameState.GameOver)
             {
@@ -119,10 +191,16 @@ namespace SkiingGame
        
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.White);
+            
 
             spriteBatch.Begin();
-            StartButton.Draw(spriteBatch);
+            StartButton.Draw(spriteBatch); 
+            ResumeButton.Draw(spriteBatch);
+            BackToStartButton.Draw(spriteBatch);
+            Save.Draw(spriteBatch);
+            Load.Draw(spriteBatch);
+            Enter.Draw(spriteBatch);
+
             spriteBatch.End();
 
             base.Draw(gameTime);
