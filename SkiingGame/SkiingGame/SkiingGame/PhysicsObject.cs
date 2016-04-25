@@ -10,8 +10,8 @@ namespace SkiingGame
     class PhysicsObject : Sprite
     {
         
-        private Rectangle hitbox;
-        
+        public Rectangle hitbox;
+        public List<PhysicsObject> Phizicalchildren;
 
         public PhysicsObject(Vector2 position, float scale, Texture2D texture, float rotation, float transparency, PlayField field) : base(position, scale, texture, rotation, transparency, field)
         {
@@ -22,6 +22,7 @@ namespace SkiingGame
             this.Transparency = transparency;
             
             children = new List<Sprite>();
+            Phizicalchildren = new List<PhysicsObject>();
             field.Addtoplayfield(this);
             hitbox = new Rectangle((int)position.X, (int)position.Y, (int)Math.Ceiling(texture.Width*scale), (int)Math.Ceiling(texture.Height*scale));
         }
@@ -36,10 +37,11 @@ namespace SkiingGame
                 Collision(obj1,obj2);
                 }            
         }
-        public void Collision(PhysicsObject Obj1, PhysicsObject Obj2)//override this
+        public virtual void Collision(PhysicsObject Obj1, PhysicsObject Obj2)//override this
         {
             
         }
+
     }
 }
 

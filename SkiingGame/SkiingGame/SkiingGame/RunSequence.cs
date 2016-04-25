@@ -33,8 +33,13 @@ namespace SkiingGame
         Texture2D flagRighttexture;
         Texture2D flagLefttexture;
         Texture2D skyMantexture;
-       
-        
+
+        Flags flag;
+        int distacebetwenflags = 200;
+        int screenHeight;
+
+        SkyMan skyMan;
+
         Stream soundfile;
         SoundEffect soundEffect;
         SoundEffectInstance soundEffectInstance;
@@ -85,6 +90,13 @@ namespace SkiingGame
             flagRighttexture = Content.Load<Texture2D>("LeftBlueflag");
             flagLefttexture = Content.Load<Texture2D>("leftRedFlag");
             skyMantexture = Content.Load<Texture2D>("Skier");
+
+            screenHeight = GraphicsDevice.Viewport.Height;
+            flag = new Flags(Vector2.Zero, 0.2f, flagRighttexture, 0, 1, field, screenHeight, distacebetwenflags);
+            flag.SetupFlags(field);
+
+            skyMan = new SkyMan(Vector2.Zero, 0.1f, skyMantexture, 0, 1, field);
+
             //Sounds
             soundfile = TitleContainer.OpenStream(@"Content\buzz.wav");
             soundEffect = SoundEffect.FromStream(soundfile);
@@ -120,7 +132,8 @@ namespace SkiingGame
             GraphicsDevice.Clear(Color.Black);
             KeyboardState keyboard = Keyboard.GetState();
             MouseState mouse = Mouse.GetState();
-
+            Debug.WriteLine(mouse.X);
+            Debug.WriteLine(mouse.Y);
 
             if (currentGameState == (int)GameState.Start)
             {
@@ -151,13 +164,25 @@ namespace SkiingGame
             }
             if (currentGameState == (int)GameState.Game)
             {
+                flag.Isvisible = true;
+                skyMan.Isvisible = true;
                 GraphicsDevice.Clear(Color.Green);
+                flag.Update();
+                skyMan.Update();
+                for(int i= 0; i < flag.numberOfFlags; i++)
+                {
+                    skyMan.PhysicsUpdate(skyMan, flag.Phizicalchildren[i]) ;
+                }
                 if (keyboard.IsKeyDown(Keys.Escape))
                 {
+                    skyMan.Isvisible = false;
+                    flag.Isvisible = false;
                     currentGameState = (int)GameState.Pause;
                 }
                 if (keyboard.IsKeyDown(Keys.N))
                 {
+                    skyMan.Isvisible = false;
+                    flag.Isvisible = false;
                     GraphicsDevice.Clear(Color.Blue);
                     currentGameState = (int)GameState.GameOver;
                 }
@@ -224,7 +249,8 @@ namespace SkiingGame
             Save.Draw(spriteBatch);
             Load.Draw(spriteBatch);
             Enter.Draw(spriteBatch);
-
+            skyMan.Draw(spriteBatch);
+            flag.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
