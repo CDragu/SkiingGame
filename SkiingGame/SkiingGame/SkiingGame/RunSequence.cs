@@ -99,10 +99,10 @@ namespace SkiingGame
             EnterButtonTexture = Content.Load<Texture2D>("StartButton");
 
             StartButton = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, true);
-            ResumeButton = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, false);
-            BackToStartButton = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, false);
+            ResumeButton = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 - GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, false);
+            BackToStartButton = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, false);
             Save = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, false);
-            Load = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, false);
+            Load = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, false);
             Enter = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, false);
 
             currentGameState = (int)GameState.Start;           
@@ -128,16 +128,18 @@ namespace SkiingGame
                 StartButton.Isvisible = true;
                 if (StartButton.IsPressed(mouse) == true)
                 {
+                    StartButton.Isvisible = false;
                     currentGameState = (int)GameState.Game;
                     Debug.Write("yes");
                 } else if (timer > 50)
                 {
+                    StartButton.Isvisible = false;
                     currentGameState = (int)GameState.Atract;
                 }
             }
             if (currentGameState == (int)GameState.Atract)
             {
-                GraphicsDevice.Clear(Color.White);
+                GraphicsDevice.Clear(Color.Green);
                 StartButton.Isvisible = false;
                 if(keyboard.IsKeyDown(Keys.Space))
                 {
@@ -149,13 +151,18 @@ namespace SkiingGame
             }
             if (currentGameState == (int)GameState.Game)
             {
-                GraphicsDevice.Clear(Color.White);
-                StartButton.Isvisible = false;
+                GraphicsDevice.Clear(Color.Green);
                 if (keyboard.IsKeyDown(Keys.Escape))
                 {
                     currentGameState = (int)GameState.Pause;
                 }
+                if (keyboard.IsKeyDown(Keys.N))
+                {
+                    GraphicsDevice.Clear(Color.Blue);
+                    currentGameState = (int)GameState.GameOver;
+                }
             }
+
             if (currentGameState == (int)GameState.Pause)
             {
                 Save.Isvisible = true;
@@ -173,17 +180,34 @@ namespace SkiingGame
                 }
                 if (ResumeButton.IsPressed(mouse) == true)
                 {
+                    Save.Isvisible = false;
+                    Load.Isvisible = false;
+                    ResumeButton.Isvisible = false;
+                    BackToStartButton.Isvisible = false;
                     currentGameState = (int)GameState.Game;
                 }
                 if (BackToStartButton.IsPressed(mouse) == true)
                 {
+                    Save.Isvisible = false;
+                    Load.Isvisible = false;
+                    ResumeButton.Isvisible = false;
+                    BackToStartButton.Isvisible = false;
                     currentGameState = (int)GameState.Start;
                     timer = 0;
                 }
+               
             }
+
             if (currentGameState == (int)GameState.GameOver)
             {
-
+                Enter.Isvisible = true;
+                GraphicsDevice.Clear(Color.Blue);
+                if (Enter.IsPressed(mouse) == true)
+                {
+                    SaveLoad save = new SaveLoad(field, "SAVE");
+                    Enter.Isvisible = false;
+                    currentGameState = (int)GameState.Atract;
+                }
             }
             base.Update(gameTime);
         }
