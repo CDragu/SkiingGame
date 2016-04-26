@@ -115,10 +115,7 @@ namespace SkiingGame
 
         public virtual void Update()
         {
-            if(soundEffectInstance != null)
-            {
-                PlayAudio();
-            }
+            
         }
 
         public Info Save()
@@ -138,12 +135,12 @@ namespace SkiingGame
         /// <summary>
         /// Animation
         /// </summary>        
-        private int currentFrame = 0;
-        private int spriteWidth = 32;
-        private int spriteHeight = 48;
-        private float spriteSpeed = 0.2f;
-        private double time = 0;
-        private float frameduration = 0.16f;
+        public int currentFrame = 0;
+        public int spriteWidth = 32;
+        public int spriteHeight = 48;
+        public float spriteSpeed = 0.2f;
+        public double time = 0;
+        public float frameduration = 0.16f;
         
         private Rectangle sourceRect;
 
@@ -198,9 +195,9 @@ namespace SkiingGame
         /// <summary>
         /// Sound
         /// </summary>
-        SoundEffectInstance soundEffectInstance;
-        AudioEmitter emitter = new AudioEmitter();
-        AudioListener listener = new AudioListener();
+        public SoundEffectInstance soundEffectInstance;
+        public AudioEmitter emitter = new AudioEmitter();
+        public AudioListener listener = new AudioListener();
         public void PlayAudio()
         {
             soundEffectInstance.Apply3D(listener, emitter);

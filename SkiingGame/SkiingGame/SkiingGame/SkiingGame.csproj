@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="Buttons.cs" />
     <Compile Include="Flags.cs" />
+    <Compile Include="Letter.cs" />
     <Compile Include="Particle.cs" />
     <Compile Include="ParticleEmiter.cs" />
     <Compile Include="PhysicsObject.cs" />

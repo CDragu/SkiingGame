@@ -20,13 +20,23 @@ namespace SkiingGame
         string filename = "mysave.sav";
         PlayField field;
         List<Sprite.Info> Innerspritelist = new List<Sprite.Info>();
+        List<RunSequence.Score> Scores;
+        List<Sprite.Info> Innerspritelist2 = new List<Sprite.Info>();
+        ToSave tosave = new ToSave();
+        public struct ToSave
+        {
+            public List<Sprite.Info> Innerspritelist2;
+            public List<RunSequence.Score> Scores2;
+        }
+        
         /// <summary>
         /// Save the Game
         /// </summary>
         /// <param name="field"></param>
         /// <param name="action"></param>
-        public SaveLoad(PlayField field, string action)
+        public SaveLoad(PlayField field, string action, List<RunSequence.Score> score )
         {
+            this.Scores = score;
             this.field = field;
             if (action == "SAVE")
                 this.InitiateSave();
@@ -35,12 +45,19 @@ namespace SkiingGame
         }
         private void InitiateSave()
         {
-            foreach(Sprite sprite in field.onthefield)
+            //foreach(Sprite sprite in field.onthefield)
+            //{
+            //    Innerspritelist.Add(sprite.Save());
+            //}
+            tosave.Innerspritelist2 = new List<Sprite.Info>();
+            
+            foreach (Sprite sprite in field.onthefield)
             {
-                Innerspritelist.Add(sprite.Save());
+                tosave.Innerspritelist2.Add(sprite.Save());
             }
-           
-                StorageDevice.BeginShowSelector(PlayerIndex.One, this.SaveToDevice, null);
+            tosave.Scores2 = Scores;
+
+            StorageDevice.BeginShowSelector(PlayerIndex.One, this.SaveToDevice, null);
           
         }
         
@@ -56,8 +73,8 @@ namespace SkiingGame
                 if (container.FileExists(filename))
                     container.DeleteFile(filename);
                 Stream stream = container.CreateFile(filename);
-                XmlSerializer serializer = new XmlSerializer(typeof(List<Sprite.Info>));
-                serializer.Serialize(stream, Innerspritelist);
+                XmlSerializer serializer = new XmlSerializer(typeof(ToSave));
+                serializer.Serialize(stream, tosave);
                 stream.Close();
                 container.Dispose();
                 result.AsyncWaitHandle.Close();
@@ -88,8 +105,8 @@ namespace SkiingGame
             if (container.FileExists(filename))
             {
                 Stream stream = container.OpenFile(filename, FileMode.Open);
-                XmlSerializer serializer = new XmlSerializer(typeof(List<Sprite.Info>));
-                Innerspritelist = (List<Sprite.Info>)serializer.Deserialize(stream);
+                XmlSerializer serializer = new XmlSerializer(typeof(ToSave));
+                tosave = (ToSave)serializer.Deserialize(stream);
                 stream.Close();
                 container.Dispose();               
                 AfterLoad(); //Update the game based on the save game file
@@ -100,10 +117,15 @@ namespace SkiingGame
             int i = 0;
             foreach (Sprite sprite in field.onthefield)
             {
-                sprite.Load(Innerspritelist[i]);
+                sprite.Load(tosave.Innerspritelist2[i]);
                 i++;
             }
                 return this.field;
+        }
+
+        public List<RunSequence.Score> ReturnScores()
+        {
+            return tosave.Scores2;
         }
     }
 }

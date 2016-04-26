@@ -97,5 +97,26 @@ namespace SkiingGame
                 base.Draw(spriteBatch);
         }
 
+        public void DrawScore(SpriteBatch spriteBatch , SpriteFont font)
+        {
+            if (Isvisible == true)
+            {
+                spriteBatch.DrawString(font, "Score: " + score.ToString(), new Vector2(40, 450), Color.Black);
+                spriteBatch.DrawString(font, "Lives: " + lives.ToString(), new Vector2(170, 450), Color.Black);
+            }
+        }
+        float time = 0;
+        public void UpdateInAttract()
+        {
+            time+=0.16f;
+            Vector2 SinPosition = new Vector2((float)Math.Sin(time) * 10, -this.Texture.Height * Scale);
+            this.Position = new Vector2(50, 200) + SinPosition;
+        }
+        public void Reset()
+        {
+            this.Position = new Vector2(100, 100);
+            lives = 3;
+            score = 0;
+        }
     }
 }

@@ -53,6 +53,7 @@ namespace SkiingGame
         Texture2D SaveButtonTexture;
         Texture2D LoadButtonTexture;
         Texture2D EnterButtonTexture;
+        Texture2D Alphabet;
 
         Buttons StartButton;
         Buttons ResumeButton;
@@ -62,6 +63,17 @@ namespace SkiingGame
         Buttons Enter;
         float timer;
         SpriteFont font;
+        Letter[] Letters;
+        
+        /// <summary>
+        /// Score
+        /// </summary>
+        public struct Score
+        {
+            public string PlayerName;
+            public int PlayerScore;
+        }
+        List<Score> Scores = new List<Score>();
 
         public PlayField field;
 
@@ -111,6 +123,7 @@ namespace SkiingGame
             LoadButtonTexture = Content.Load<Texture2D>("StartButton");
             EnterButtonTexture = Content.Load<Texture2D>("StartButton");
             font = Content.Load<SpriteFont>("Pixel");
+            Alphabet = Content.Load<Texture2D>("Alphabet v2");
 
             StartButton = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, true);
             ResumeButton = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 - GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, false);
@@ -118,6 +131,23 @@ namespace SkiingGame
             Save = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, false);
             Load = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, false);
             Enter = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, false);
+            Letters = new Letter[3];
+            for(int i = 0; i < 3; i++)
+            {
+                Letters[i] = new Letter(new Vector2(GraphicsDevice.Viewport.Width / 4 * (i + 1) - 20, GraphicsDevice.Viewport.Height / 2 - startButtonTexture.Height / 2), 1, Alphabet, null, 0, 1, field);
+            }
+
+            //LoadTheScores
+            try
+            {
+                SaveLoad load = new SaveLoad(field, "LOAD", Scores);
+                Scores = load.ReturnScores();
+            }
+            catch
+            {
+
+            }
+
 
             currentGameState = (int)GameState.Start;           
         }
@@ -127,43 +157,67 @@ namespace SkiingGame
         {
         }
 
-       
+        int count = 0;
+        KeyboardState keyboard;
+        KeyboardState Oldkeyboard;
         protected override void Update(GameTime gameTime)
         {
+           
             timer += 0.16f;//to be changed
             GraphicsDevice.Clear(Color.Black);
-            KeyboardState keyboard = Keyboard.GetState();
+            Oldkeyboard = keyboard;
+            keyboard = Keyboard.GetState();
+            
             MouseState mouse = Mouse.GetState();
             Debug.WriteLine(mouse.X);
             Debug.WriteLine(mouse.Y);
 
             if (currentGameState == (int)GameState.Start)
             {
+                
                 GraphicsDevice.Clear(Color.Black);
                 StartButton.Isvisible = true;
                 if (StartButton.IsPressed(mouse) == true)
                 {
+
+                    flag.Reset(field);
+                    skyMan.Reset();
                     StartButton.Isvisible = false;
                     currentGameState = (int)GameState.Game;
                     Debug.Write("yes");
                 } else if (timer > 50)
                 {
+                    SaveLoad load = new SaveLoad(field, "LOAD", Scores);
+                    Scores = load.ReturnScores();
+                    skyMan.Reset();
+                    flag.Reset(field);
                     StartButton.Isvisible = false;
+                    flag.Isvisible = true;
+                    skyMan.Isvisible = true;
+                    flag.atractmode = true;
                     currentGameState = (int)GameState.Atract;
                 }
             }
+
+            
             if (currentGameState == (int)GameState.Atract)
             {
                 GraphicsDevice.Clear(Color.Green);
-                StartButton.Isvisible = false;
+                flag.UpdateInAttract();
+                skyMan.UpdateInAttract();
                 if(keyboard.IsKeyDown(Keys.Space))
                 {
                     currentGameState = (int)GameState.Start;
                     timer = 0;
                     Debug.Write("yes");
+                    flag.Isvisible = false;
+                    flag.atractmode = false;
+                    skyMan.Isvisible = false;
                 }
 
             }
+
+
             if (currentGameState == (int)GameState.Game)
             {
                 flag.Isvisible = true;
@@ -177,9 +231,16 @@ namespace SkiingGame
                 }
                 if(skyMan.lives <= 0)
                 {
+
                     skyMan.Isvisible = false;
                     flag.Isvisible = false;
                     GraphicsDevice.Clear(Color.Blue);
+
+                    Enter.Isvisible = true;
+                    for (int i = 0; i < 3; i++)
+                    {
+                        Letters[i].Isvisible = true;
+                    }
                     currentGameState = (int)GameState.GameOver;
                 }
                 if (keyboard.IsKeyDown(Keys.Escape))
@@ -193,9 +254,17 @@ namespace SkiingGame
                     skyMan.Isvisible = false;
                     flag.Isvisible = false;
                     GraphicsDevice.Clear(Color.Blue);
+
+                    Enter.Isvisible = true;
+                    for (int i = 0; i < 3; i++)
+                    {
+                        Letters[i].Isvisible = true;                       
+                    }
                     currentGameState = (int)GameState.GameOver;
                 }
             }
+
+
 
             if (currentGameState == (int)GameState.Pause)
             {
@@ -205,11 +274,11 @@ namespace SkiingGame
                 BackToStartButton.Isvisible = true;
                 if (Save.IsPressed(mouse) == true)
                 {
-                    SaveLoad save = new SaveLoad(field, "SAVE");
+                    SaveLoad save = new SaveLoad(field, "SAVE", Scores);
                 }
                 if (Load.IsPressed(mouse) == true)
                 {
-                    SaveLoad load = new SaveLoad(field, "LOAD");
+                    SaveLoad load = new SaveLoad(field, "LOAD",Scores);
                     field = load.AfterLoad();
                 }
                 if (ResumeButton.IsPressed(mouse) == true)
@@ -231,18 +300,59 @@ namespace SkiingGame
                 }
                
             }
-
+            
             if (currentGameState == (int)GameState.GameOver)
             {
-                Enter.Isvisible = true;
+                
+                for (int i = 0; i < 3; i++)
+                {                   
+                    Letters[i].Update();
+                }
                 GraphicsDevice.Clear(Color.Blue);
-                if (Enter.IsPressed(mouse) == true)
+             
+                if (keyboard.IsKeyDown(Keys.Down) || keyboard.IsKeyDown(Keys.S) && (!keyboard.Equals(Oldkeyboard)))
                 {
-                    SaveLoad save = new SaveLoad(field, "SAVE");
+                   Letters[count].Up();
+                }
+                if (keyboard.IsKeyDown(Keys.Up) || keyboard.IsKeyDown(Keys.W) && (!keyboard.Equals(Oldkeyboard)))
+                {
+                    Letters[count].Down();                  
+                }
+                if (keyboard.IsKeyDown(Keys.Enter) && (!keyboard.Equals(Oldkeyboard)))
+                {
+                    count++;
+                }
+                
+
+                
+                if (count == 3)
+                {
+                    flag.Reset(field);
+                    
+                    count = 0;
                     Enter.Isvisible = false;
                     currentGameState = (int)GameState.Atract;
+                    
+                    flag.Isvisible = true;
+                    skyMan.Isvisible = true;
+                    flag.atractmode = true;
+                    
+                    for (int i = 0; i < 3; i++)
+                    {
+                        Letters[i].Isvisible = false;
+                        skyMan.name += Letters[i].CurrentLetter();
+                    }
+                    Score currentscore = new Score();
+                    currentscore.PlayerName = skyMan.name;
+                    currentscore.PlayerScore = skyMan.score;
+                    Scores.Add(currentscore);
+                    SaveLoad save = new SaveLoad(field, "SAVE", Scores);
+                    skyMan.Reset();
+                    
                 }
+
             }
+           
             base.Update(gameTime);
         }
 
@@ -259,9 +369,16 @@ namespace SkiingGame
             Load.Draw(spriteBatch);
             Enter.Draw(spriteBatch);
             skyMan.Draw(spriteBatch);
+            skyMan.DrawScore(spriteBatch, font);
             flag.Draw(spriteBatch);
-            spriteBatch.DrawString(font, "Cannon angle: ", new Vector2(20, 20), Color.White);
+            flag.DrawInAttract(Scores, spriteBatch, font);
+            for (int i = 0; i < 3; i++)
+            {
+                Letters[i].DrawWithAnimation(spriteBatch);
+            }
+
             spriteBatch.End();
+
 
             base.Draw(gameTime);
         }
