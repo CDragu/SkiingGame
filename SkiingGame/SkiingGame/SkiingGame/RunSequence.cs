@@ -61,6 +61,7 @@ namespace SkiingGame
         Buttons Load;
         Buttons Enter;
         float timer;
+        SpriteFont font;
 
         public PlayField field;
 
@@ -109,6 +110,7 @@ namespace SkiingGame
             SaveButtonTexture = Content.Load<Texture2D>("StartButton");
             LoadButtonTexture = Content.Load<Texture2D>("StartButton");
             EnterButtonTexture = Content.Load<Texture2D>("StartButton");
+            font = Content.Load<SpriteFont>("Pixel");
 
             StartButton = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, true);
             ResumeButton = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 - GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, false);
@@ -258,6 +260,7 @@ namespace SkiingGame
             Enter.Draw(spriteBatch);
             skyMan.Draw(spriteBatch);
             flag.Draw(spriteBatch);
+            spriteBatch.DrawString(font, "Cannon angle: ", new Vector2(20, 20), Color.White);
             spriteBatch.End();
 
             base.Draw(gameTime);
