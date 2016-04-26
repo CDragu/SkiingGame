@@ -13,6 +13,7 @@ namespace SkiingGame
         int ScreenHeight;
         public int numberOfFlags;
         int distance;
+        
         public bool Isvisible
         {
             get { return isvisible; }
@@ -45,6 +46,8 @@ namespace SkiingGame
                     Vector2 SinPosition = new Vector2((float)Math.Sin(i) * 10,-this.Texture.Height * Scale);
                     Phizicalchildren[i].Position = SinPosition;
                     Phizicalchildren[i+1].Position = SinPosition + new Vector2(distance, 0);
+                    Phizicalchildren[i].HasBeenHit = false;
+                    Phizicalchildren[i+1].HasBeenHit = false;
                 }
                 Phizicalchildren[i].Update();
                 Phizicalchildren[i+1].Update();

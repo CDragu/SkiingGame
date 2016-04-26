@@ -95,7 +95,7 @@ namespace SkiingGame
             flag = new Flags(Vector2.Zero, 0.2f, flagRighttexture, 0, 1, field, screenHeight, distacebetwenflags);
             flag.SetupFlags(field);
 
-            skyMan = new SkyMan(Vector2.Zero, 0.1f, skyMantexture, 0, 1, field);
+            skyMan = new SkyMan(new Vector2(100,100), 0.1f, skyMantexture, 0, 1, field);
 
             //Sounds
             soundfile = TitleContainer.OpenStream(@"Content\buzz.wav");
@@ -172,6 +172,13 @@ namespace SkiingGame
                 for(int i= 0; i < flag.numberOfFlags; i++)
                 {
                     skyMan.PhysicsUpdate(skyMan, flag.Phizicalchildren[i]) ;
+                }
+                if(skyMan.lives <= 0)
+                {
+                    skyMan.Isvisible = false;
+                    flag.Isvisible = false;
+                    GraphicsDevice.Clear(Color.Blue);
+                    currentGameState = (int)GameState.GameOver;
                 }
                 if (keyboard.IsKeyDown(Keys.Escape))
                 {
