@@ -98,10 +98,9 @@ namespace SkiingGame
         {
             if (isvisible == true && atractmode == true)
             {
-               foreach(RunSequence.Score score in Scores)
+              for(int i  = 0; i < Scores.Count; i++)
                 {
-                    spriteBatch.DrawString(font, score.PlayerName.ToString() + "  " + score.PlayerScore.ToString(), new Vector2(40, 20), Color.Black);
-                    time++;
+                    spriteBatch.DrawString(font, Scores[i].PlayerName.ToString() + "  " + Scores[i].PlayerScore.ToString(), new Vector2(40, 20+(i*10)), Color.Black);
                 }
             }
         }

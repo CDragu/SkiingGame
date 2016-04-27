@@ -117,6 +117,7 @@ namespace SkiingGame
             this.Position = new Vector2(100, 100);
             lives = 3;
             score = 0;
+            name = "";
         }
     }
 }

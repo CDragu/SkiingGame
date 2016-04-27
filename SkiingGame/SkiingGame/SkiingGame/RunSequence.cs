@@ -138,15 +138,15 @@ namespace SkiingGame
             }
 
             //LoadTheScores
-            try
-            {
-                SaveLoad load = new SaveLoad(field, "LOAD", Scores);
-                Scores = load.ReturnScores();
-            }
-            catch
-            {
+            //try
+            //{
+            //    SaveLoad load = new SaveLoad(field, "LOAD", Scores);
+            //    Scores = load.ReturnScores();
+            //}
+            //catch
+            //{
 
-            }
+            //}
 
 
             currentGameState = (int)GameState.Start;           
@@ -346,6 +346,7 @@ namespace SkiingGame
                     currentscore.PlayerName = skyMan.name;
                     currentscore.PlayerScore = skyMan.score;
                     Scores.Add(currentscore);
+                    Scores.OrderBy(c => c.PlayerScore);
                     SaveLoad save = new SaveLoad(field, "SAVE", Scores);
                     skyMan.Reset();
                     
