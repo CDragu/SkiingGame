@@ -108,7 +108,7 @@ namespace SkiingGame
             skyMantexture = Content.Load<Texture2D>("Skier");
 
             screenHeight = GraphicsDevice.Viewport.Height;
-            flag = new Flags(Vector2.Zero, 0.2f, flagRighttexture, 0, 1, field, screenHeight, distacebetwenflags);
+            flag = new Flags(Vector2.Zero, 0.2f, flagRighttexture, 0, 1, field, screenHeight, distacebetwenflags, flagLefttexture);
             flag.SetupFlags(field);
 
             skyMan = new SkyMan(new Vector2(100, 100), 0.1f, skyMantexture, 0, 1, field, GraphicsDevice.Viewport.Height, GraphicsDevice.Viewport.Width);
@@ -366,6 +366,8 @@ namespace SkiingGame
                         Letters[i].Isvisible = false;
                         skyMan.name += Letters[i].CurrentLetter();
                     }
+                    SaveLoad load = new SaveLoad(field, "LOAD", Scores, skyMan.scoreInfo);
+                    Scores = load.ReturnScores();
                     Score currentscore = new Score();
                     currentscore.PlayerName = skyMan.name;
                     currentscore.PlayerScore = skyMan.score;

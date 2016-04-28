@@ -15,13 +15,15 @@ namespace SkiingGame
         float distance;
         public bool atractmode;
         float time = 0;
+        float speed =1;
+        Texture2D SecondTexture;
 
         public bool Isvisible
         {
             get { return isvisible; }
             set { isvisible = value; }
         }
-        public Flags(Vector2 position, float scale, Texture2D texture, float rotation, float transparency, PlayField field, int ScreenHeight, float distance) : base(position, scale, texture, rotation, transparency, field)
+        public Flags(Vector2 position, float scale, Texture2D texture, float rotation, float transparency, PlayField field, int ScreenHeight, float distance, Texture2D SecondTexture) : base(position, scale, texture, rotation, transparency, field)
         {
             this.Position = position;
             this.Scale = scale;
@@ -34,6 +36,7 @@ namespace SkiingGame
             this.ScreenHeight = ScreenHeight;
             this.distance = distance;
             this.type = "Flags";
+            this.SecondTexture = SecondTexture;
         }
 
         public override void Update()
@@ -42,8 +45,8 @@ namespace SkiingGame
            
             for (int i = 0; i < numberOfFlags; i+=2)
             {
-                Phizicalchildren[i].Position += new Vector2(0, 1);
-                Phizicalchildren[i+1].Position += new Vector2(0, 1);
+                Phizicalchildren[i].Position += new Vector2(0, speed);
+                Phizicalchildren[i + 1].Position += new Vector2(0, speed);
                 if (Phizicalchildren[i].Position.Y > 480)
                 {
                     Vector2 SinPosition = new Vector2((float)(Math.Sin(time) * 0.05f * time),-this.Texture.Height * Scale);
@@ -57,6 +60,7 @@ namespace SkiingGame
             }
             distance -= 0.02f;
             time += 0.16f;
+            speed += time*0.000001f;
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -73,8 +77,8 @@ namespace SkiingGame
             for (int i = 0; i< numberOfFlags; i+=2)
             {
                 Vector2 SinPosition = new Vector2((float)(Math.Sin(time) * 0.05f * time), (-i * this.Texture.Height * Scale)/2);
-                this.Phizicalchildren.Add(new Flags(SinPosition+= new Vector2(33,0), 0.2f, this.Texture, 0, 1, field, numberOfFlags,distance));
-                this.Phizicalchildren.Add(new Flags(SinPosition += new Vector2(distance-20,0), 0.2f, this.Texture, 0, 1, field, numberOfFlags, distance));
+                this.Phizicalchildren.Add(new Flags(SinPosition += new Vector2(33, 0), 0.2f, this.Texture, 0, 1, field, numberOfFlags, distance, SecondTexture));
+                this.Phizicalchildren.Add(new Flags(SinPosition += new Vector2(distance - 20, 0), 0.2f, SecondTexture, 0, 1, field, numberOfFlags, distance, SecondTexture));
             }
         }
 

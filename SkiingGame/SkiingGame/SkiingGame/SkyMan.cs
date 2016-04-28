@@ -153,7 +153,7 @@ namespace SkiingGame
         {
             time+=0.15f;
             Vector2 SinPosition = new Vector2((float)(Math.Sin(time) * 0.05f*time), -this.Texture.Height * Scale);
-            this.Position = new Vector2(50, 200) + SinPosition;
+            this.Position = new Vector2(120, 200) + SinPosition;
         }
         public void Reset()
         {
