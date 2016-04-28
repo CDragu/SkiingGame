@@ -107,15 +107,15 @@ namespace SkiingGame
             //Objects
             flagRighttexture = Content.Load<Texture2D>("BlueFlag");
             flagLefttexture = Content.Load<Texture2D>("RedFlag");
-            skyMantexture = Content.Load<Texture2D>("skyman");
+            skyMantexture = Content.Load<Texture2D>("skymanrevampwhite");
             cheesetexture = Content.Load<Texture2D>("Cheese");
             bouldertexture = Content.Load<Texture2D>("Boulder");
 
             screenHeight = GraphicsDevice.Viewport.Height;
-            flag = new Flags(Vector2.Zero, 0.2f, flagRighttexture, 0, 1, field, screenHeight, distacebetwenflags, flagLefttexture);
+            flag = new Flags(Vector2.Zero, 0.4f, flagRighttexture, 0, 1, field, screenHeight, distacebetwenflags, flagLefttexture);
             flag.SetupFlags(field);
 
-            skyMan = new SkyMan(new Vector2(100, 100), 0.5f, skyMantexture, 0, 1, field, GraphicsDevice.Viewport.Height, GraphicsDevice.Viewport.Width);
+            skyMan = new SkyMan(new Vector2(100, 100), 0.4f, skyMantexture, 0, 1, field, GraphicsDevice.Viewport.Height, GraphicsDevice.Viewport.Width);
 
             boulder = new SnowBolder(Vector2.Zero, 0.1f, bouldertexture, 0, 1, field, 20);
             boulder.InitializeBoulders(field);
@@ -208,7 +208,7 @@ namespace SkiingGame
             
             if (currentGameState == (int)GameState.Atract)
             {
-                GraphicsDevice.Clear(Color.Green);
+                GraphicsDevice.Clear(Color.Black);
                 flag.UpdateInAttract();
                 skyMan.UpdateInAttract();
                 if(keyboard.IsKeyDown(Keys.Space))
@@ -228,7 +228,7 @@ namespace SkiingGame
             {
                 flag.Isvisible = true;
                 skyMan.Isvisible = true;
-                GraphicsDevice.Clear(Color.Green);
+                GraphicsDevice.Clear(Color.Black);
                 flag.Update();
                 skyMan.Update();
                 boulder.Update();
@@ -399,6 +399,7 @@ namespace SkiingGame
             Load.Draw(spriteBatch);
             Enter.Draw(spriteBatch);
             skyMan.DrawWithAnimation(spriteBatch);
+            //skyMan.Draw(spriteBatch);
             skyMan.DrawScore(spriteBatch, font);
             flag.Draw(spriteBatch);
             flag.DrawInAttract(Scores, spriteBatch, font);

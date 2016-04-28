@@ -51,7 +51,7 @@ namespace SkiingGame
                     Phizicalchildren[i].Position += new Vector2(1, 0);
                    
                 }
-                if(Phizicalchildren[i].Position.X > 270)
+                if(Phizicalchildren[i].Position.X > 400)
                 {
                     Deactivate(Phizicalchildren[i]);
                     Phizicalchildren[i].HasBeenHit = false;

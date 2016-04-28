@@ -47,32 +47,36 @@ namespace SkiingGame
             field.Addtoplayfield(this);
             lives = 3;
             score = 0;
-            InitializeAnimation(70, 130, 0.2f, 0.16f);
+            InitializeAnimation(55, 134, 0.2f, 0.16f);
         }
 
         public override void Update()
         {
-            
+            currentFrame = 0;
             KeyboardState keyboard = Keyboard.GetState();
              if (keyboard.IsKeyDown(Keys.Down) || keyboard.IsKeyDown(Keys.S))
             {
                 this.Position += new Vector2(0, +speed);
-                currentFrame = 0;
+                //currentFrame = 0;
+                
             }
              if (keyboard.IsKeyDown(Keys.Up) || keyboard.IsKeyDown(Keys.W))
             {
                 this.Position += new Vector2(0, -speed);
-                currentFrame = 0;
+                //currentFrame = 0;
+                
             }
              if(keyboard.IsKeyDown(Keys.Left) || keyboard.IsKeyDown(Keys.A))
             {
                 this.Position += new Vector2(-speed, 0);
-                currentFrame = 1;
+                currentFrame = 2;
+                
             }
              if(keyboard.IsKeyDown(Keys.Right) || keyboard.IsKeyDown(Keys.D))
             {
                 this.Position += new Vector2(+speed, 0);
-                currentFrame = 2;
+                currentFrame = 1;
+                
             }
              if(this.Position.X < 0)
             {
@@ -90,10 +94,11 @@ namespace SkiingGame
             {
                 this.Position += new Vector2(0, -speed);
             }
-            hitbox = new Rectangle((int)Position.X, (int)Position.Y, (int)Math.Ceiling(Texture.Width * Scale), (int)Math.Ceiling(Texture.Height * Scale));
+            hitbox = new Rectangle((int)Position.X, (int)Position.Y, (int)Math.Ceiling(spriteWidth * Scale), (int)Math.Ceiling(spriteHeight * Scale));
             ScoreUP();
             scoreInfo.score = this.score;
             scoreInfo.lives = this.lives;
+            //currentFrame = 0;
             SetSourceRect();
         }
 
@@ -155,8 +160,8 @@ namespace SkiingGame
         {
             if (Isvisible == true)
             {
-                spriteBatch.DrawString(font, "Score: " + score.ToString(), new Vector2(40, 450), Color.Black);
-                spriteBatch.DrawString(font, "Lives: " + lives.ToString(), new Vector2(170, 450), Color.Black);
+                spriteBatch.DrawString(font, "Score: " + score.ToString(), new Vector2(40, 450), Color.White);
+                spriteBatch.DrawString(font, "Lives: " + lives.ToString(), new Vector2(170, 450), Color.White);
             }
         }
         
