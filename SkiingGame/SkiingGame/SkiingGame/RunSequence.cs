@@ -124,21 +124,21 @@ namespace SkiingGame
             soundEffectInstance = soundEffect.CreateInstance();
 
             //Buttons
-            startButtonTexture = Content.Load<Texture2D>("StartButton");
-            ResumeButtonTexture = Content.Load<Texture2D>("StartButton");
-            BackToStartButtonTexture = Content.Load<Texture2D>("StartButton");
-            SaveButtonTexture = Content.Load<Texture2D>("StartButton");
-            LoadButtonTexture = Content.Load<Texture2D>("StartButton");
-            EnterButtonTexture = Content.Load<Texture2D>("StartButton");
+            startButtonTexture = Content.Load<Texture2D>("Go");
+            ResumeButtonTexture = Content.Load<Texture2D>("resume");
+            BackToStartButtonTexture = Content.Load<Texture2D>("Back to Menu");
+            SaveButtonTexture = Content.Load<Texture2D>("save");
+            LoadButtonTexture = Content.Load<Texture2D>("load");
+            EnterButtonTexture = Content.Load<Texture2D>("go");
             font = Content.Load<SpriteFont>("Pixel");
             Alphabet = Content.Load<Texture2D>("Alphabet v2");
 
             StartButton = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, true);
-            ResumeButton = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 - GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, false);
-            BackToStartButton = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, false);
-            Save = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, false);
-            Load = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, false);
-            Enter = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, false);
+            ResumeButton = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 - GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, ResumeButtonTexture, 0, 1, field, false);
+            BackToStartButton = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, BackToStartButtonTexture, 0, 1, field, false);
+            Save = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, SaveButtonTexture, 0, 1, field, false);
+            Load = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 - startButtonTexture.Height / 2), 1, LoadButtonTexture, 0, 1, field, false);
+            Enter = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, EnterButtonTexture, 0, 1, field, false);
             Letters = new Letter[3];
             for(int i = 0; i < 3; i++)
             {
