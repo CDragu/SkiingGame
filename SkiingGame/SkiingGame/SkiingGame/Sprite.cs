@@ -21,6 +21,7 @@ namespace SkiingGame
             public Vector2 position;
             public float scale;
             public float rotation;
+            public bool hasbeenHit;
             public Texture2D texture;            
         }
 
@@ -31,8 +32,8 @@ namespace SkiingGame
         private float transparency;
         private Texture2D texture;
         public List<Sprite> children;
-       
-        
+        private bool hasbeenHit;
+
 
         public Vector2 Position
         {
@@ -64,6 +65,11 @@ namespace SkiingGame
             set { texture = value; }
         }
 
+        public bool HasBeenHit
+        {
+            get { return hasbeenHit; }
+            set { hasbeenHit = value; }
+        }
 
 
         public Sprite(Vector2 position, float scale, Texture2D texture, SoundEffectInstance soundEffect, float rotation, float transparency, PlayField field)
@@ -124,6 +130,7 @@ namespace SkiingGame
             info.position = this.position;
             info.scale = this.scale;
             info.rotation = this.rotation;
+            info.hasbeenHit = this.hasbeenHit;
             return info;
         }
         public void Load(Info info)
@@ -131,6 +138,7 @@ namespace SkiingGame
             this.position = info.position;
             this.scale = info.scale;
             this.rotation = info.rotation;
+            this.hasbeenHit = info.hasbeenHit;
         }
         /// <summary>
         /// Animation

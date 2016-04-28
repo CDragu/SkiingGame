@@ -23,10 +23,12 @@ namespace SkiingGame
         List<RunSequence.Score> Scores;
         List<Sprite.Info> Innerspritelist2 = new List<Sprite.Info>();
         ToSave tosave = new ToSave();
+        SkyMan.ScoreInfo skyman;
         public struct ToSave
         {
             public List<Sprite.Info> Innerspritelist2;
             public List<RunSequence.Score> Scores2;
+            public SkyMan.ScoreInfo skyman;
         }
         
         /// <summary>
@@ -34,8 +36,9 @@ namespace SkiingGame
         /// </summary>
         /// <param name="field"></param>
         /// <param name="action"></param>
-        public SaveLoad(PlayField field, string action, List<RunSequence.Score> score )
+        public SaveLoad(PlayField field, string action, List<RunSequence.Score> score, SkyMan.ScoreInfo skyman )
         {
+            this.skyman = skyman;
             this.Scores = score;
             this.field = field;
             if (action == "SAVE")
@@ -45,10 +48,6 @@ namespace SkiingGame
         }
         private void InitiateSave()
         {
-            //foreach(Sprite sprite in field.onthefield)
-            //{
-            //    Innerspritelist.Add(sprite.Save());
-            //}
             tosave.Innerspritelist2 = new List<Sprite.Info>();
             
             foreach (Sprite sprite in field.onthefield)
@@ -56,6 +55,8 @@ namespace SkiingGame
                 tosave.Innerspritelist2.Add(sprite.Save());
             }
             tosave.Scores2 = Scores;
+
+            tosave.skyman = skyman;
 
             StorageDevice.BeginShowSelector(PlayerIndex.One, this.SaveToDevice, null);
           
@@ -126,6 +127,10 @@ namespace SkiingGame
         public List<RunSequence.Score> ReturnScores()
         {
             return tosave.Scores2;
+        }
+        public SkyMan.ScoreInfo ReturnSkyMan()
+        {
+            return tosave.skyman;
         }
     }
 }

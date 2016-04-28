@@ -12,7 +12,7 @@ namespace SkiingGame
         private bool isvisible;
         int ScreenHeight;
         public int numberOfFlags;
-        int distance;
+        float distance;
         public bool atractmode;
         float time = 0;
 
@@ -21,7 +21,7 @@ namespace SkiingGame
             get { return isvisible; }
             set { isvisible = value; }
         }
-        public Flags(Vector2 position, float scale, Texture2D texture, float rotation, float transparency, PlayField field, int ScreenHeight, int distance) : base(position, scale, texture, rotation, transparency, field)
+        public Flags(Vector2 position, float scale, Texture2D texture, float rotation, float transparency, PlayField field, int ScreenHeight, float distance) : base(position, scale, texture, rotation, transparency, field)
         {
             this.Position = position;
             this.Scale = scale;
@@ -33,6 +33,7 @@ namespace SkiingGame
             field.Addtoplayfield(this);
             this.ScreenHeight = ScreenHeight;
             this.distance = distance;
+            this.type = "Flags";
         }
 
         public override void Update()
@@ -45,15 +46,17 @@ namespace SkiingGame
                 Phizicalchildren[i+1].Position += new Vector2(0, 1);
                 if (Phizicalchildren[i].Position.Y > 480)
                 {
-                    Vector2 SinPosition = new Vector2((float)Math.Sin(i) * 10,-this.Texture.Height * Scale);
-                    Phizicalchildren[i].Position = SinPosition;
-                    Phizicalchildren[i+1].Position = SinPosition + new Vector2(distance, 0);
+                    Vector2 SinPosition = new Vector2((float)(Math.Sin(time) * 0.05f * time),-this.Texture.Height * Scale);
+                    Phizicalchildren[i].Position = SinPosition + new Vector2(1500/(distance*0.9f)+20, 0);
+                    Phizicalchildren[i+1].Position = SinPosition + new Vector2(distance+20, 0);
                     Phizicalchildren[i].HasBeenHit = false;
                     Phizicalchildren[i+1].HasBeenHit = false;
                 }
                 Phizicalchildren[i].Update();
                 Phizicalchildren[i+1].Update();
             }
+            distance -= 0.02f;
+            time += 0.16f;
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -69,9 +72,9 @@ namespace SkiingGame
             numberOfFlags = (int)Math.Ceiling((ScreenHeight + (this.Texture.Height * Scale)) / ((this.Texture.Height*Scale)/2));
             for (int i = 0; i< numberOfFlags; i+=2)
             {
-                Vector2 SinPosition = new Vector2((float)Math.Sin(i)*10, (-i * this.Texture.Height * Scale)/2);
-                this.Phizicalchildren.Add(new Flags(SinPosition, 0.2f, this.Texture, 0, 1, field, numberOfFlags,distance));
-                this.Phizicalchildren.Add(new Flags(SinPosition += new Vector2(distance,0), 0.2f, this.Texture, 0, 1, field, numberOfFlags, distance));
+                Vector2 SinPosition = new Vector2((float)(Math.Sin(time) * 0.05f * time), (-i * this.Texture.Height * Scale)/2);
+                this.Phizicalchildren.Add(new Flags(SinPosition+= new Vector2(33,0), 0.2f, this.Texture, 0, 1, field, numberOfFlags,distance));
+                this.Phizicalchildren.Add(new Flags(SinPosition += new Vector2(distance-20,0), 0.2f, this.Texture, 0, 1, field, numberOfFlags, distance));
             }
         }
 
@@ -83,7 +86,7 @@ namespace SkiingGame
                 Phizicalchildren[i + 1].Position += new Vector2(0, 1);
                 if (Phizicalchildren[i].Position.Y > 480)
                 {
-                    Vector2 SinPosition = new Vector2((float)Math.Sin(i) * 10, -this.Texture.Height * Scale);
+                    Vector2 SinPosition = new Vector2((float)(Math.Sin(time) * 0.05f * time), -this.Texture.Height * Scale);
                     Phizicalchildren[i].Position = SinPosition;
                     Phizicalchildren[i + 1].Position = SinPosition + new Vector2(distance, 0);
                     Phizicalchildren[i].HasBeenHit = false;
@@ -107,8 +110,15 @@ namespace SkiingGame
         public void Reset(PlayField field)
         {
             this.Position = Vector2.Zero;
+            distance = 200;
             time = 0;
-            
+            for (int i = 0; i < numberOfFlags; i += 2)
+            {
+                Vector2 SinPosition = new Vector2((float)(Math.Sin(time) * 0.05f * time), (-i * this.Texture.Height * Scale) / 2);
+                this.Phizicalchildren[i].Position =(SinPosition += new Vector2(33, 0));
+                this.Phizicalchildren[i+1].Position =(SinPosition += new Vector2(distance - 20, 0));
+            }
+
         }
     }
 }

@@ -40,6 +40,9 @@ namespace SkiingGame
 
         SkyMan skyMan;
 
+        SnowBolder boulder;
+        Cheese cheese;
+
         Stream soundfile;
         SoundEffect soundEffect;
         SoundEffectInstance soundEffectInstance;
@@ -108,7 +111,12 @@ namespace SkiingGame
             flag = new Flags(Vector2.Zero, 0.2f, flagRighttexture, 0, 1, field, screenHeight, distacebetwenflags);
             flag.SetupFlags(field);
 
-            skyMan = new SkyMan(new Vector2(100,100), 0.1f, skyMantexture, 0, 1, field);
+            skyMan = new SkyMan(new Vector2(100, 100), 0.1f, skyMantexture, 0, 1, field, GraphicsDevice.Viewport.Height, GraphicsDevice.Viewport.Width);
+
+            boulder = new SnowBolder(Vector2.Zero, 0.1f, flagLefttexture, 0, 1, field, 20);
+            boulder.InitializeBoulders(field);
+            cheese = new Cheese(Vector2.Zero, 0.1f, flagLefttexture, 0, 1, field,10);
+            cheese.Initializecheese(field);
 
             //Sounds
             soundfile = TitleContainer.OpenStream(@"Content\buzz.wav");
@@ -136,18 +144,6 @@ namespace SkiingGame
             {
                 Letters[i] = new Letter(new Vector2(GraphicsDevice.Viewport.Width / 4 * (i + 1) - 20, GraphicsDevice.Viewport.Height / 2 - startButtonTexture.Height / 2), 1, Alphabet, null, 0, 1, field);
             }
-
-            //LoadTheScores
-            //try
-            //{
-            //    SaveLoad load = new SaveLoad(field, "LOAD", Scores);
-            //    Scores = load.ReturnScores();
-            //}
-            //catch
-            //{
-
-            //}
-
 
             currentGameState = (int)GameState.Start;           
         }
@@ -182,15 +178,21 @@ namespace SkiingGame
 
                     flag.Reset(field);
                     skyMan.Reset();
+                    boulder.Reset();
+                    cheese.Reset();
+                    cheese.Isvisible = true;
+                    boulder.Isvisible = true;
                     StartButton.Isvisible = false;
                     currentGameState = (int)GameState.Game;
                     Debug.Write("yes");
                 } else if (timer > 50)
                 {
-                    SaveLoad load = new SaveLoad(field, "LOAD", Scores);
+                    SaveLoad load = new SaveLoad(field, "LOAD", Scores, skyMan.scoreInfo);
                     Scores = load.ReturnScores();
                     skyMan.Reset();
                     flag.Reset(field);
+                    boulder.Reset();
+                    cheese.Reset();
                     StartButton.Isvisible = false;
                     flag.Isvisible = true;
                     skyMan.Isvisible = true;
@@ -225,17 +227,30 @@ namespace SkiingGame
                 GraphicsDevice.Clear(Color.Green);
                 flag.Update();
                 skyMan.Update();
-                for(int i= 0; i < flag.numberOfFlags; i++)
+                boulder.Update();
+                
+                cheese.Update();
+                
+                for (int i= 0; i < flag.numberOfFlags; i++)
                 {
                     skyMan.PhysicsUpdate(skyMan, flag.Phizicalchildren[i]) ;
                 }
-                if(skyMan.lives <= 0)
+                for (int i = 0; i < cheese.maxcheese; i++)
+                {
+                    skyMan.PhysicsUpdate(skyMan, cheese.Phizicalchildren[i]);
+                }
+                for (int i = 0; i < boulder.maxboulders; i++)
+                {
+                    skyMan.PhysicsUpdate(skyMan, boulder.Phizicalchildren[i]);
+                }
+                if (skyMan.lives <= 0)
                 {
 
                     skyMan.Isvisible = false;
                     flag.Isvisible = false;
                     GraphicsDevice.Clear(Color.Blue);
-
+                    cheese.Isvisible = false;
+                    boulder.Isvisible = false;
                     Enter.Isvisible = true;
                     for (int i = 0; i < 3; i++)
                     {
@@ -245,12 +260,16 @@ namespace SkiingGame
                 }
                 if (keyboard.IsKeyDown(Keys.Escape))
                 {
+                    cheese.Isvisible = false;
+                    boulder.Isvisible = false;
                     skyMan.Isvisible = false;
                     flag.Isvisible = false;
                     currentGameState = (int)GameState.Pause;
                 }
                 if (keyboard.IsKeyDown(Keys.N))
                 {
+                    cheese.Isvisible = false;
+                    boulder.Isvisible = false;
                     skyMan.Isvisible = false;
                     flag.Isvisible = false;
                     GraphicsDevice.Clear(Color.Blue);
@@ -274,12 +293,15 @@ namespace SkiingGame
                 BackToStartButton.Isvisible = true;
                 if (Save.IsPressed(mouse) == true)
                 {
-                    SaveLoad save = new SaveLoad(field, "SAVE", Scores);
+                    SaveLoad save = new SaveLoad(field, "SAVE", Scores, skyMan.scoreInfo);
                 }
                 if (Load.IsPressed(mouse) == true)
                 {
-                    SaveLoad load = new SaveLoad(field, "LOAD",Scores);
+                    SaveLoad load = new SaveLoad(field, "LOAD",Scores, skyMan.scoreInfo);
                     field = load.AfterLoad();
+                    skyMan.scoreInfo = load.ReturnSkyMan();
+                    skyMan.lives = skyMan.scoreInfo.lives;
+                    skyMan.score = skyMan.scoreInfo.score;
                 }
                 if (ResumeButton.IsPressed(mouse) == true)
                 {
@@ -287,6 +309,8 @@ namespace SkiingGame
                     Load.Isvisible = false;
                     ResumeButton.Isvisible = false;
                     BackToStartButton.Isvisible = false;
+                    cheese.Isvisible = true;
+                    boulder.Isvisible = true;
                     currentGameState = (int)GameState.Game;
                 }
                 if (BackToStartButton.IsPressed(mouse) == true)
@@ -347,7 +371,7 @@ namespace SkiingGame
                     currentscore.PlayerScore = skyMan.score;
                     Scores.Add(currentscore);
                     Scores.OrderBy(c => c.PlayerScore);
-                    SaveLoad save = new SaveLoad(field, "SAVE", Scores);
+                    SaveLoad save = new SaveLoad(field, "SAVE", Scores, skyMan.scoreInfo);
                     skyMan.Reset();
                     
                 }
@@ -360,9 +384,8 @@ namespace SkiingGame
        
         protected override void Draw(GameTime gameTime)
         {
-            
-
             spriteBatch.Begin();
+
             StartButton.Draw(spriteBatch); 
             ResumeButton.Draw(spriteBatch);
             BackToStartButton.Draw(spriteBatch);
@@ -377,10 +400,10 @@ namespace SkiingGame
             {
                 Letters[i].DrawWithAnimation(spriteBatch);
             }
+            cheese.Draw(spriteBatch);
+            boulder.Draw(spriteBatch);
 
             spriteBatch.End();
-
-
             base.Draw(gameTime);
         }
     }

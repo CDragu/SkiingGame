@@ -7,18 +7,16 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace SkiingGame
 {
-    class PhysicsObject : Sprite
+    public class PhysicsObject : Sprite
     {
         
         public Rectangle hitbox;
         public List<PhysicsObject> Phizicalchildren;
-        private bool hasbeenHit;
+        
+        public bool Active;
+        public string type;
 
-        public bool HasBeenHit
-        {
-            get { return hasbeenHit; }
-            set { hasbeenHit = value; }
-        }
+        
 
         public PhysicsObject(Vector2 position, float scale, Texture2D texture, float rotation, float transparency, PlayField field) : base(position, scale, texture, rotation, transparency, field)
         {

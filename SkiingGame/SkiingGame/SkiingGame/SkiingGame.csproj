@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Buttons.cs" />
+    <Compile Include="Cheese.cs" />
     <Compile Include="Flags.cs" />
     <Compile Include="Letter.cs" />
     <Compile Include="Particle.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="RunSequence.cs" />
     <Compile Include="SaveLoad.cs" />
     <Compile Include="SkyMan.cs" />
+    <Compile Include="SnowBolder.cs" />
     <Compile Include="Sprite.cs" />
   </ItemGroup>
   <ItemGroup>
