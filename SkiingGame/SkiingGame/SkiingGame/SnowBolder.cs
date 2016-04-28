@@ -62,6 +62,7 @@ namespace SkiingGame
                 }
                 Phizicalchildren[i].Update();
             }
+            Rotation++;
 
         }
         
@@ -105,7 +106,7 @@ namespace SkiingGame
                 foreach (PhysicsObject Children in this.Phizicalchildren)
                 {
                     Vector2 ChildPosition = new Vector2(this.Position.X + Children.Position.X, this.Position.Y + Children.Position.Y);
-                    spriteBatch.Draw(Children.Texture, ChildPosition, null, Color.White * Children.Transparency, Children.Rotation, Vector2.Zero, Children.Scale, SpriteEffects.None, 0f);
+                    spriteBatch.Draw(Children.Texture, ChildPosition, null, Color.White * Children.Transparency, Children.Rotation, new Vector2(this.Texture.Height/2,this.Texture.Width/2), Children.Scale, SpriteEffects.None, 0f);
                 }
         }
     }

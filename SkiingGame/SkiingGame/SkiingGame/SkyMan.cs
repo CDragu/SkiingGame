@@ -46,7 +46,8 @@ namespace SkiingGame
             Phizicalchildren = new List<PhysicsObject>();
             field.Addtoplayfield(this);
             lives = 3;
-            score = 0;         
+            score = 0;
+            InitializeAnimation(70, 130, 0.2f, 0.16f);
         }
 
         public override void Update()
@@ -56,18 +57,22 @@ namespace SkiingGame
              if (keyboard.IsKeyDown(Keys.Down) || keyboard.IsKeyDown(Keys.S))
             {
                 this.Position += new Vector2(0, +speed);
+                currentFrame = 0;
             }
              if (keyboard.IsKeyDown(Keys.Up) || keyboard.IsKeyDown(Keys.W))
             {
                 this.Position += new Vector2(0, -speed);
+                currentFrame = 0;
             }
              if(keyboard.IsKeyDown(Keys.Left) || keyboard.IsKeyDown(Keys.A))
             {
                 this.Position += new Vector2(-speed, 0);
+                currentFrame = 1;
             }
              if(keyboard.IsKeyDown(Keys.Right) || keyboard.IsKeyDown(Keys.D))
             {
                 this.Position += new Vector2(+speed, 0);
+                currentFrame = 2;
             }
              if(this.Position.X < 0)
             {
@@ -89,6 +94,7 @@ namespace SkiingGame
             ScoreUP();
             scoreInfo.score = this.score;
             scoreInfo.lives = this.lives;
+            SetSourceRect();
         }
 
         public override void Collision(PhysicsObject Obj1, PhysicsObject Obj2)
@@ -139,6 +145,11 @@ namespace SkiingGame
             if(Isvisible == true)
                 base.Draw(spriteBatch);
         }
+        public override void DrawWithAnimation(SpriteBatch spriteBatch)
+        {
+            if (Isvisible == true)
+                base.DrawWithAnimation(spriteBatch);
+        }
 
         public void DrawScore(SpriteBatch spriteBatch , SpriteFont font)
         {
@@ -163,5 +174,6 @@ namespace SkiingGame
             name = "";
             time = 0;
         }
+        
     }
 }

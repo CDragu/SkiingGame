@@ -107,7 +107,7 @@ namespace SkiingGame
             //Objects
             flagRighttexture = Content.Load<Texture2D>("BlueFlag");
             flagLefttexture = Content.Load<Texture2D>("RedFlag");
-            skyMantexture = Content.Load<Texture2D>("Skier");
+            skyMantexture = Content.Load<Texture2D>("skyman");
             cheesetexture = Content.Load<Texture2D>("Cheese");
             bouldertexture = Content.Load<Texture2D>("Boulder");
 
@@ -115,7 +115,7 @@ namespace SkiingGame
             flag = new Flags(Vector2.Zero, 0.2f, flagRighttexture, 0, 1, field, screenHeight, distacebetwenflags, flagLefttexture);
             flag.SetupFlags(field);
 
-            skyMan = new SkyMan(new Vector2(100, 100), 0.1f, skyMantexture, 0, 1, field, GraphicsDevice.Viewport.Height, GraphicsDevice.Viewport.Width);
+            skyMan = new SkyMan(new Vector2(100, 100), 0.5f, skyMantexture, 0, 1, field, GraphicsDevice.Viewport.Height, GraphicsDevice.Viewport.Width);
 
             boulder = new SnowBolder(Vector2.Zero, 0.1f, bouldertexture, 0, 1, field, 20);
             boulder.InitializeBoulders(field);
@@ -398,7 +398,7 @@ namespace SkiingGame
             Save.Draw(spriteBatch);
             Load.Draw(spriteBatch);
             Enter.Draw(spriteBatch);
-            skyMan.Draw(spriteBatch);
+            skyMan.DrawWithAnimation(spriteBatch);
             skyMan.DrawScore(spriteBatch, font);
             flag.Draw(spriteBatch);
             flag.DrawInAttract(Scores, spriteBatch, font);
