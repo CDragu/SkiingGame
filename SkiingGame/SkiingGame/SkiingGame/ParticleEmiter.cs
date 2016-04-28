@@ -9,13 +9,13 @@ namespace SkiingGame
 {
     public class ParticleEmiter
     {
-        private Random random;
+        public Random random;
         public Vector2 position;
-        private Particle[] particleList;
-        private int maxparticles;
-        private Texture2D[] textureList;
-        private int numberoftextures;
-        private int particleLife;
+        public Particle[] particleList;
+        public int maxparticles;
+        public Texture2D[] textureList;
+        public int numberoftextures;
+        public int particleLife;
 
         public ParticleEmiter(Texture2D[] textures, Vector2 position, int maxparticles, int numberoftextures, int particleLife)
         {
@@ -36,20 +36,28 @@ namespace SkiingGame
             for (int i = 0; i < maxparticles; i++)
             {
                 if(particleList[i] == null)
+                {
                     particleList[i] = GenerateNewParticle();
+                    break;
+                }
+                    
             }
 
             for (int particle = 0; particle < maxparticles; particle++)
             {
-                particleList[particle].Update();
-                if (particleList[particle].Lifetime <= 0)
+                if(particleList[particle] != null)
                 {
-                    particleList[particle] = null;
+                    particleList[particle].Update();
+                    if (particleList[particle].Lifetime <= 0)
+                     {
+                         particleList[particle] = null;
+                     }
                 }
+                
             }
         }
 
-        private Particle GenerateNewParticle()
+        public virtual Particle GenerateNewParticle()
         {
             Texture2D texture = textureList[random.Next(numberoftextures)];
             Vector2 position = this.position;
@@ -66,7 +74,7 @@ namespace SkiingGame
             return new Particle(texture, position, velocity, angle, angularVelocity, color, size, lifetime);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
             
             for (int i = 0; i < maxparticles; i++)

@@ -14,7 +14,7 @@ namespace SkiingGame
         public int numberOfFlags;
         float distance;
         public bool atractmode;
-        float time = 0;
+        new float time = 0;
         float speed =1;
         Texture2D SecondTexture;
 
@@ -107,8 +107,9 @@ namespace SkiingGame
             {
               for(int i  = 0; i < Scores.Count; i++)
                 {
-                    spriteBatch.DrawString(font, Scores[i].PlayerName.ToString() + "  " + Scores[i].PlayerScore.ToString(), new Vector2(40, 20+(i*10)), Color.Black);
+                    spriteBatch.DrawString(font, Scores[i].PlayerName.ToString() + "  " + Scores[i].PlayerScore.ToString(), new Vector2(100, 20+(i*10)), Color.White);
                 }
+                spriteBatch.DrawString(font, "Press Space To Try Agian!!", new Vector2(20, 400), Color.White);
             }
         }
         public void Reset(PlayField field)

@@ -118,8 +118,16 @@ namespace SkiingGame
             int i = 0;
             foreach (Sprite sprite in field.onthefield)
             {
+                try
+                {
                 sprite.Load(tosave.Innerspritelist2[i]);
                 i++;
+                }
+                catch
+                {
+
+                }
+                
             }
                 return this.field;
         }

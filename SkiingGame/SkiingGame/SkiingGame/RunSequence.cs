@@ -41,6 +41,7 @@ namespace SkiingGame
         int screenHeight;
 
         SkyMan skyMan;
+        Texture2D particle;
 
         SnowBolder boulder;
         Cheese cheese;
@@ -59,7 +60,11 @@ namespace SkiingGame
         Texture2D LoadButtonTexture;
         Texture2D EnterButtonTexture;
         Texture2D Alphabet;
+        Texture2D Bondtexture;
+        Texture2D GameOvertexture;
 
+        SmartSprite Bond;
+        SmartSprite Gameover;
         Buttons StartButton;
         Buttons ResumeButton;
         Buttons BackToStartButton;
@@ -110,17 +115,25 @@ namespace SkiingGame
             skyMantexture = Content.Load<Texture2D>("skymanrevampwhite");
             cheesetexture = Content.Load<Texture2D>("Cheese");
             bouldertexture = Content.Load<Texture2D>("Boulder");
+            Bondtexture = Content.Load<Texture2D>("BondFAce");
+            GameOvertexture = Content.Load<Texture2D>("GameOverScreen");
+            particle = Content.Load<Texture2D>("SnowParticle");
+
 
             screenHeight = GraphicsDevice.Viewport.Height;
             flag = new Flags(Vector2.Zero, 0.4f, flagRighttexture, 0, 1, field, screenHeight, distacebetwenflags, flagLefttexture);
             flag.SetupFlags(field);
 
-            skyMan = new SkyMan(new Vector2(100, 100), 0.4f, skyMantexture, 0, 1, field, GraphicsDevice.Viewport.Height, GraphicsDevice.Viewport.Width);
+            Texture2D[] Particles = new Texture2D[1];
+            Particles[0] = particle;
+            skyMan = new SkyMan(new Vector2(100, 100), 0.4f, skyMantexture, 0, 1, field, GraphicsDevice.Viewport.Height, GraphicsDevice.Viewport.Width, Particles);
 
             boulder = new SnowBolder(Vector2.Zero, 0.1f, bouldertexture, 0, 1, field, 20);
             boulder.InitializeBoulders(field);
             cheese = new Cheese(Vector2.Zero, 0.1f, cheesetexture, 0, 1, field, 10);
             cheese.Initializecheese(field);
+            Bond = new SmartSprite(new Vector2(30, 30), 1, Bondtexture, 0, 1, field);
+            Gameover = new SmartSprite(new Vector2(-5,-50), 1, GameOvertexture, 0, 1, field);
 
             //Sounds
             soundfile = TitleContainer.OpenStream(@"Content\buzz.wav");
@@ -138,10 +151,10 @@ namespace SkiingGame
             Alphabet = Content.Load<Texture2D>("Alphabet v2");
 
             StartButton = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, startButtonTexture, 0, 1, field, true);
-            ResumeButton = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 - GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, ResumeButtonTexture, 0, 1, field, false);
-            BackToStartButton = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, BackToStartButtonTexture, 0, 1, field, false);
-            Save = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, SaveButtonTexture, 0, 1, field, false);
-            Load = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 - startButtonTexture.Height / 2), 1, LoadButtonTexture, 0, 1, field, false);
+            ResumeButton = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width /2 - 20, GraphicsDevice.Viewport.Height / 2 - GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 0.5f, ResumeButtonTexture, 0, 1, field, false);
+            BackToStartButton = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width-20 , GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 + GraphicsDevice.Viewport.Height / 8 - startButtonTexture.Height / 2), 0.5f, BackToStartButtonTexture, 0, 1, field, false);
+            Save = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 0.5f, SaveButtonTexture, 0, 1, field, false);
+            Load = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 - startButtonTexture.Height / 2), 0.5f, LoadButtonTexture, 0, 1, field, false);
             Enter = new Buttons(new Vector2(GraphicsDevice.Viewport.Width / 2 - startButtonTexture.Width / 2, GraphicsDevice.Viewport.Height / 2 + GraphicsDevice.Viewport.Height / 4 - startButtonTexture.Height / 2), 1, EnterButtonTexture, 0, 1, field, false);
             Letters = new Letter[3];
             for(int i = 0; i < 3; i++)
@@ -174,7 +187,7 @@ namespace SkiingGame
 
             if (currentGameState == (int)GameState.Start)
             {
-                
+                Bond.Isvisible = true;
                 GraphicsDevice.Clear(Color.Black);
                 StartButton.Isvisible = true;
                 if (StartButton.IsPressed(mouse) == true)
@@ -187,6 +200,7 @@ namespace SkiingGame
                     cheese.Isvisible = true;
                     boulder.Isvisible = true;
                     StartButton.Isvisible = false;
+                    Bond.Isvisible = false;
                     currentGameState = (int)GameState.Game;
                     Debug.Write("yes");
                 } else if (timer > 50)
@@ -201,6 +215,7 @@ namespace SkiingGame
                     flag.Isvisible = true;
                     skyMan.Isvisible = true;
                     flag.atractmode = true;
+                    Bond.Isvisible = false;
                     currentGameState = (int)GameState.Atract;
                 }
             }
@@ -219,6 +234,7 @@ namespace SkiingGame
                     flag.Isvisible = false;
                     flag.atractmode = false;
                     skyMan.Isvisible = false;
+                    StartButton.Isvisible = true;
                 }
 
             }
@@ -255,7 +271,8 @@ namespace SkiingGame
                     GraphicsDevice.Clear(Color.Blue);
                     cheese.Isvisible = false;
                     boulder.Isvisible = false;
-                    Enter.Isvisible = true;
+                    
+                    Gameover.Isvisible = true;
                     for (int i = 0; i < 3; i++)
                     {
                         Letters[i].Isvisible = true;
@@ -270,21 +287,7 @@ namespace SkiingGame
                     flag.Isvisible = false;
                     currentGameState = (int)GameState.Pause;
                 }
-                if (keyboard.IsKeyDown(Keys.N))
-                {
-                    cheese.Isvisible = false;
-                    boulder.Isvisible = false;
-                    skyMan.Isvisible = false;
-                    flag.Isvisible = false;
-                    GraphicsDevice.Clear(Color.Blue);
-
-                    Enter.Isvisible = true;
-                    for (int i = 0; i < 3; i++)
-                    {
-                        Letters[i].Isvisible = true;                       
-                    }
-                    currentGameState = (int)GameState.GameOver;
-                }
+                
             }
 
 
@@ -336,7 +339,7 @@ namespace SkiingGame
                 {                   
                     Letters[i].Update();
                 }
-                GraphicsDevice.Clear(Color.Blue);
+                GraphicsDevice.Clear(Color.Black);
              
                 if (keyboard.IsKeyDown(Keys.Down) || keyboard.IsKeyDown(Keys.S) && (!keyboard.Equals(Oldkeyboard)))
                 {
@@ -358,9 +361,9 @@ namespace SkiingGame
                     flag.Reset(field);
                     
                     count = 0;
-                    Enter.Isvisible = false;
-                    currentGameState = (int)GameState.Atract;
                     
+                    currentGameState = (int)GameState.Atract;
+                    Gameover.Isvisible = false;
                     flag.Isvisible = true;
                     skyMan.Isvisible = true;
                     flag.atractmode = true;
@@ -397,10 +400,7 @@ namespace SkiingGame
             BackToStartButton.Draw(spriteBatch);
             Save.Draw(spriteBatch);
             Load.Draw(spriteBatch);
-            Enter.Draw(spriteBatch);
-            skyMan.DrawWithAnimation(spriteBatch);
-            //skyMan.Draw(spriteBatch);
-            skyMan.DrawScore(spriteBatch, font);
+            Enter.Draw(spriteBatch);                       
             flag.Draw(spriteBatch);
             flag.DrawInAttract(Scores, spriteBatch, font);
             for (int i = 0; i < 3; i++)
@@ -409,6 +409,10 @@ namespace SkiingGame
             }
             cheese.Draw(spriteBatch);
             boulder.Draw(spriteBatch);
+            Bond.Draw(spriteBatch);
+            Gameover.Draw(spriteBatch);
+            skyMan.DrawWithAnimation(spriteBatch);
+            skyMan.DrawScore(spriteBatch, font);
 
             spriteBatch.End();
             base.Draw(gameTime);

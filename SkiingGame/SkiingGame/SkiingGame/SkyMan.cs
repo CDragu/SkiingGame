@@ -20,6 +20,7 @@ namespace SkiingGame
         public ScoreInfo scoreInfo;
         public int WindowHeight;
         public int WindowLenght;
+        public SnowTrail trail;
 
         public struct ScoreInfo
         {
@@ -33,7 +34,7 @@ namespace SkiingGame
             set { isvisible = value; }
         }
        
-        public SkyMan(Vector2 position, float scale, Texture2D texture, float rotation, float transparency, PlayField field, int WindowHeight, int WindowLenght ) : base(position, scale, texture, rotation, transparency, field)
+        public SkyMan(Vector2 position, float scale, Texture2D texture, float rotation, float transparency, PlayField field, int WindowHeight, int WindowLenght, Texture2D[] particles ) : base(position, scale, texture, rotation, transparency, field)
         {
             this.Position = position;
             this.Scale = scale;
@@ -48,10 +49,13 @@ namespace SkiingGame
             lives = 3;
             score = 0;
             InitializeAnimation(55, 134, 0.2f, 0.16f);
+            trail = new SnowTrail(particles, this.Position, 400, 1, 50);
         }
 
         public override void Update()
         {
+           
+            
             currentFrame = 0;
             KeyboardState keyboard = Keyboard.GetState();
              if (keyboard.IsKeyDown(Keys.Down) || keyboard.IsKeyDown(Keys.S))
@@ -98,6 +102,8 @@ namespace SkiingGame
             ScoreUP();
             scoreInfo.score = this.score;
             scoreInfo.lives = this.lives;
+            trail.position = Position + new Vector2(12,14);            
+            trail.Update();
             //currentFrame = 0;
             SetSourceRect();
         }
@@ -153,15 +159,19 @@ namespace SkiingGame
         public override void DrawWithAnimation(SpriteBatch spriteBatch)
         {
             if (Isvisible == true)
+            {
                 base.DrawWithAnimation(spriteBatch);
+                trail.Draw(spriteBatch);
+            }
+                
         }
 
         public void DrawScore(SpriteBatch spriteBatch , SpriteFont font)
         {
             if (Isvisible == true)
             {
-                spriteBatch.DrawString(font, "Score: " + score.ToString(), new Vector2(40, 450), Color.White);
-                spriteBatch.DrawString(font, "Lives: " + lives.ToString(), new Vector2(170, 450), Color.White);
+                spriteBatch.DrawString(font, "Score: " + score.ToString(), new Vector2(40, 450), Color.White,0,Vector2.Zero,1,SpriteEffects.None,1);
+                spriteBatch.DrawString(font, "Lives: " + lives.ToString(), new Vector2(170, 450), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
             }
         }
         
@@ -169,11 +179,12 @@ namespace SkiingGame
         {
             time+=0.15f;
             Vector2 SinPosition = new Vector2((float)(Math.Sin(time) * 0.05f*time), -this.Texture.Height * Scale);
-            this.Position = new Vector2(120, 200) + SinPosition;
+            this.Position = new Vector2(120, 300) + SinPosition;
+            currentFrame = 0;
         }
         public void Reset()
         {
-            this.Position = new Vector2(100, 100);
+            this.Position = new Vector2(125, 300);
             lives = 3;
             score = 0;
             name = "";
