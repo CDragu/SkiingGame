@@ -26,13 +26,13 @@ namespace SkiingGame
         {
             Texture2D texture = textureList[random.Next(numberoftextures)];
             Vector2 position = this.position;
-            Vector2 velocity = new Vector2(0, 2f);
+            Vector2 velocity = new Vector2(random.Next(-20,20), -random.Next(1,3));
             float angle = 0;
             float angularVelocity = 0f;
             Color color = new Color(
                         (float)random.NextDouble(),
-                        (float)random.NextDouble(),
-                        (float)random.NextDouble());
+                        0,
+                        0);
             float size = 0.5f;
             int lifetime = particleLife;
 

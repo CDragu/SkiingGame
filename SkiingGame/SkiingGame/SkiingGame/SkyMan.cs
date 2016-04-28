@@ -181,6 +181,9 @@ namespace SkiingGame
             Vector2 SinPosition = new Vector2((float)(Math.Sin(time) * 0.05f*time), -this.Texture.Height * Scale);
             this.Position = new Vector2(120, 300) + SinPosition;
             currentFrame = 0;
+            trail.position = Position + new Vector2(12, 12);
+            trail.Update();
+
         }
         public void Reset()
         {
@@ -189,6 +192,7 @@ namespace SkiingGame
             score = 0;
             name = "";
             time = 0;
+            currentFrame = 0;
         }
         
     }

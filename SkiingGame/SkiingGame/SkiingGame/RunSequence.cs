@@ -46,6 +46,8 @@ namespace SkiingGame
         SnowBolder boulder;
         Cheese cheese;
 
+        Explosion explosion;
+
         Stream soundfile;
         SoundEffect soundEffect;
         SoundEffectInstance soundEffectInstance;
@@ -128,6 +130,7 @@ namespace SkiingGame
             Particles[0] = particle;
             skyMan = new SkyMan(new Vector2(100, 100), 0.4f, skyMantexture, 0, 1, field, GraphicsDevice.Viewport.Height, GraphicsDevice.Viewport.Width, Particles);
 
+            explosion = new Explosion(Particles, new Vector2(120, 460), 400, 1, 200);
             boulder = new SnowBolder(Vector2.Zero, 0.1f, bouldertexture, 0, 1, field, 20);
             boulder.InitializeBoulders(field);
             cheese = new Cheese(Vector2.Zero, 0.1f, cheesetexture, 0, 1, field, 10);
@@ -201,6 +204,7 @@ namespace SkiingGame
                     boulder.Isvisible = true;
                     StartButton.Isvisible = false;
                     Bond.Isvisible = false;
+                    explosion.isvisible = true;
                     currentGameState = (int)GameState.Game;
                     Debug.Write("yes");
                 } else if (timer > 50)
@@ -248,6 +252,7 @@ namespace SkiingGame
                 flag.Update();
                 skyMan.Update();
                 boulder.Update();
+                explosion.Update();
                 
                 cheese.Update();
                 
@@ -271,6 +276,7 @@ namespace SkiingGame
                     GraphicsDevice.Clear(Color.Blue);
                     cheese.Isvisible = false;
                     boulder.Isvisible = false;
+                    explosion.isvisible = false;
                     
                     Gameover.Isvisible = true;
                     for (int i = 0; i < 3; i++)
@@ -285,6 +291,7 @@ namespace SkiingGame
                     boulder.Isvisible = false;
                     skyMan.Isvisible = false;
                     flag.Isvisible = false;
+                    explosion.isvisible = false;
                     currentGameState = (int)GameState.Pause;
                 }
                 
@@ -411,6 +418,7 @@ namespace SkiingGame
             boulder.Draw(spriteBatch);
             Bond.Draw(spriteBatch);
             Gameover.Draw(spriteBatch);
+            explosion.Draw(spriteBatch);
             skyMan.DrawWithAnimation(spriteBatch);
             skyMan.DrawScore(spriteBatch, font);
 
