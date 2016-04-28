@@ -33,6 +33,8 @@ namespace SkiingGame
         Texture2D flagRighttexture;
         Texture2D flagLefttexture;
         Texture2D skyMantexture;
+        Texture2D cheesetexture;
+        Texture2D bouldertexture;
 
         Flags flag;
         int distacebetwenflags = 200;
@@ -103,9 +105,11 @@ namespace SkiingGame
 
             field = new PlayField();
             //Objects
-            flagRighttexture = Content.Load<Texture2D>("LeftBlueflag");
-            flagLefttexture = Content.Load<Texture2D>("leftRedFlag");
+            flagRighttexture = Content.Load<Texture2D>("BlueFlag");
+            flagLefttexture = Content.Load<Texture2D>("RedFlag");
             skyMantexture = Content.Load<Texture2D>("Skier");
+            cheesetexture = Content.Load<Texture2D>("Cheese");
+            bouldertexture = Content.Load<Texture2D>("Boulder");
 
             screenHeight = GraphicsDevice.Viewport.Height;
             flag = new Flags(Vector2.Zero, 0.2f, flagRighttexture, 0, 1, field, screenHeight, distacebetwenflags, flagLefttexture);
@@ -113,9 +117,9 @@ namespace SkiingGame
 
             skyMan = new SkyMan(new Vector2(100, 100), 0.1f, skyMantexture, 0, 1, field, GraphicsDevice.Viewport.Height, GraphicsDevice.Viewport.Width);
 
-            boulder = new SnowBolder(Vector2.Zero, 0.1f, flagLefttexture, 0, 1, field, 20);
+            boulder = new SnowBolder(Vector2.Zero, 0.1f, bouldertexture, 0, 1, field, 20);
             boulder.InitializeBoulders(field);
-            cheese = new Cheese(Vector2.Zero, 0.1f, flagLefttexture, 0, 1, field,10);
+            cheese = new Cheese(Vector2.Zero, 0.1f, cheesetexture, 0, 1, field, 10);
             cheese.Initializecheese(field);
 
             //Sounds
