@@ -66,7 +66,7 @@ namespace SkiingGame
         {
             for (int i = 0; i < numberOfFlags; i += 2)
             {
-                if (Phizicalchildren[i].Position.Y > skyman.Position.Y && Phizicalchildren[i].HasBeenHit == false)
+                if (Phizicalchildren[i].Position.Y > skyman.Position.Y && Phizicalchildren[i].HasBeenHit == false && skyman.Position.X > Phizicalchildren[i].Position.X && skyman.Position.X < Phizicalchildren[i+1].Position.X)
                 {
                     skyman.score++;
                     Phizicalchildren[i].HasBeenHit = true;

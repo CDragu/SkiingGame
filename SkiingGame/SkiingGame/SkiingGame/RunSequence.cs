@@ -197,6 +197,7 @@ namespace SkiingGame
                 {
 
                     flag.Reset(field);
+                    explosion.reset();
                     skyMan.Reset();
                     boulder.Reset();
                     cheese.Reset();
@@ -279,6 +280,7 @@ namespace SkiingGame
                 {
 
                     flag.Reset(field);
+                    explosion.reset();
                     skyMan.Reset();
                     boulder.Reset();
                     cheese.Reset();

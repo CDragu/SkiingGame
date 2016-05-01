@@ -47,6 +47,10 @@ namespace SkiingGame
             }
             
         }
+        public void reset()
+        {
+            this.position.Y = 460;
+        }
 
     }
 }
