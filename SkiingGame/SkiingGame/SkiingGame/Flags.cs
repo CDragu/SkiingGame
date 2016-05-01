@@ -62,6 +62,20 @@ namespace SkiingGame
             time += 0.16f;
             speed += time*0.000001f;
         }
+        public void IncreaseScore(SkyMan skyman)
+        {
+            for (int i = 0; i < numberOfFlags; i += 2)
+            {
+                if (Phizicalchildren[i].Position.Y > skyman.Position.Y && Phizicalchildren[i].HasBeenHit == false)
+                {
+                    skyman.score++;
+                    Phizicalchildren[i].HasBeenHit = true;
+                    Phizicalchildren[i+1].HasBeenHit = true;
+
+                }
+            }
+
+        }
         public override void Draw(SpriteBatch spriteBatch)
         {
             if (isvisible == true)
@@ -107,7 +121,7 @@ namespace SkiingGame
             {
               for(int i  = 0; i < Scores.Count; i++)
                 {
-                    spriteBatch.DrawString(font, Scores[i].PlayerName.ToString() + "  " + Scores[i].PlayerScore.ToString(), new Vector2(100, 20+(i*10)), Color.White);
+                    spriteBatch.DrawString(font, (i+1) + "." + Scores[i].PlayerName.ToString() + "  " + Scores[i].PlayerScore.ToString(), new Vector2(90, 20+(i*10)), Color.White);
                 }
                 spriteBatch.DrawString(font, "Press Space To Try Agian!!", new Vector2(20, 400), Color.White);
             }

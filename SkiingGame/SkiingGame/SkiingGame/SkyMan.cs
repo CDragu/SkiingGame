@@ -58,25 +58,25 @@ namespace SkiingGame
             
             currentFrame = 0;
             KeyboardState keyboard = Keyboard.GetState();
-             if (keyboard.IsKeyDown(Keys.Down) || keyboard.IsKeyDown(Keys.S))
+             if (keyboard.IsKeyDown(Keys.Down)) //|| keyboard.IsKeyDown(Keys.S))
             {
                 this.Position += new Vector2(0, +speed);
                 //currentFrame = 0;
                 
             }
-             if (keyboard.IsKeyDown(Keys.Up) || keyboard.IsKeyDown(Keys.W))
+             if (keyboard.IsKeyDown(Keys.Up)) //|| keyboard.IsKeyDown(Keys.W))
             {
                 this.Position += new Vector2(0, -speed);
                 //currentFrame = 0;
                 
             }
-             if(keyboard.IsKeyDown(Keys.Left) || keyboard.IsKeyDown(Keys.A))
+             if(keyboard.IsKeyDown(Keys.Left)) //|| keyboard.IsKeyDown(Keys.A))
             {
                 this.Position += new Vector2(-speed, 0);
                 currentFrame = 2;
                 
             }
-             if(keyboard.IsKeyDown(Keys.Right) || keyboard.IsKeyDown(Keys.D))
+             if(keyboard.IsKeyDown(Keys.Right)) //|| keyboard.IsKeyDown(Keys.D))
             {
                 this.Position += new Vector2(+speed, 0);
                 currentFrame = 1;
@@ -86,7 +86,7 @@ namespace SkiingGame
             {
                 this.Position +=new  Vector2(speed,0);
             }
-             if(this.Position.X > WindowLenght - Texture.Width*Scale)
+             if(this.Position.X > WindowLenght - spriteWidth * Scale)
             {
                 this.Position += new Vector2(-speed, 0);
             }
@@ -94,15 +94,16 @@ namespace SkiingGame
             {
                 this.Position += new Vector2(0, speed);
             }
-            if (this.Position.Y > WindowHeight - Texture.Height * Scale)
+            if (this.Position.Y > WindowHeight - spriteHeight * Scale)
             {
                 this.Position += new Vector2(0, -speed);
             }
             hitbox = new Rectangle((int)Position.X, (int)Position.Y, (int)Math.Ceiling(spriteWidth * Scale), (int)Math.Ceiling(spriteHeight * Scale));
-            ScoreUP();
+            //ScoreUP();
+
             scoreInfo.score = this.score;
             scoreInfo.lives = this.lives;
-            trail.position = Position + new Vector2(12,14);            
+            trail.position = Position + new Vector2(12,19);            
             trail.Update();
             //currentFrame = 0;
             SetSourceRect();
@@ -181,6 +182,7 @@ namespace SkiingGame
             Vector2 SinPosition = new Vector2((float)(Math.Sin(time) * 0.05f*time), -this.Texture.Height * Scale);
             this.Position = new Vector2(120, 300) + SinPosition;
             currentFrame = 0;
+            SetSourceRect();
             trail.position = Position + new Vector2(12, 12);
             trail.Update();
 
