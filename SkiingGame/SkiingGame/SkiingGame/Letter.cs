@@ -11,7 +11,10 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 namespace SkiingGame
-{
+{   
+    /// <summary>
+    /// class for managing the name introduction when the game ends, using a big spritesheet that has all the letters of the alphabet
+    /// </summary>
     class Letter:Sprite
     {
         int currentLettr;
@@ -43,25 +46,32 @@ namespace SkiingGame
             currentFrame = currentLettr;
             SetSourceRect();
         }
-
+        /// <summary>
+        /// gose to the next letter
+        /// </summary>
         public void Up()
         {
             currentLettr++;
             if (currentLettr > 28)
                 currentLettr = 0;           
         }
-
+        /// <summary>
+        /// one letter back
+        /// </summary>
         public void Down()
         {
             currentLettr--;
             if (currentLettr < 0)
                 currentLettr = 28;            
         }
-
+        /// <summary>
+        /// returns in string the current letter
+        /// </summary>
+        /// <returns></returns>
         public string CurrentLetter()
         {
             int value = 65 + currentLettr;
-            return Char.ConvertFromUtf32(value).ToString();
+            return Char.ConvertFromUtf32(value).ToString();//converts from ascii to char and then to string
         }
 
         public void Reset()

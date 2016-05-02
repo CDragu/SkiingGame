@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework;
 
 namespace SkiingGame
 {
+    /// <summary>
+    /// pattern class for the particle system; creates particles and manages them
+    /// </summary>
     public class ParticleEmiter
     {
         public Random random;
@@ -29,11 +32,14 @@ namespace SkiingGame
             random = new Random();
         }
 
+        /// <summary>
+        /// verifies the particles and decide if to destroy them or not
+        /// </summary>
         public void Update()
         {
             
 
-            for (int i = 0; i < maxparticles; i++)
+            for (int i = 0; i < maxparticles; i++)//fills the list with particles
             {
                 if(particleList[i] == null)
                 {
@@ -43,7 +49,7 @@ namespace SkiingGame
                     
             }
 
-            for (int particle = 0; particle < maxparticles; particle++)
+            for (int particle = 0; particle < maxparticles; particle++)//checks the lifetime of the particle
             {
                 if(particleList[particle] != null)
                 {
@@ -56,7 +62,10 @@ namespace SkiingGame
                 
             }
         }
-
+        /// <summary>
+        /// creates a new particle, to be edited for different results
+        /// </summary>
+        /// <returns></returns>
         public virtual Particle GenerateNewParticle()
         {
             Texture2D texture = textureList[random.Next(numberoftextures)];
@@ -73,7 +82,7 @@ namespace SkiingGame
 
             return new Particle(texture, position, velocity, angle, angularVelocity, color, size, lifetime);
         }
-
+        
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             

@@ -20,7 +20,7 @@ namespace SkiingGame
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         
-        enum GameState
+        enum GameState// according to this states different objects will be visible on the screen
         {
             Start,
             Atract,
@@ -36,6 +36,9 @@ namespace SkiingGame
         Texture2D cheesetexture;
         Texture2D bouldertexture;
 
+        /// <summary>
+        /// GameObjects
+        /// </summary>
         Flags flag;
         int distacebetwenflags = 200;
         int screenHeight;
@@ -48,6 +51,9 @@ namespace SkiingGame
 
         Explosion explosion;
 
+        /// <summary>
+        /// Sound 
+        /// </summary>
         Stream soundfile;
         SoundEffect soundEffect;
         SoundEffectInstance soundEffectInstance;
@@ -87,6 +93,9 @@ namespace SkiingGame
         }
         List<Score> Scores = new List<Score>();
 
+        /// <summary>
+        /// Plaufield; list of sprites
+        /// </summary>
         public PlayField field;
 
         public RunSequence()
@@ -94,8 +103,9 @@ namespace SkiingGame
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             this.IsMouseVisible = true;
-            graphics.PreferredBackBufferWidth = 272;
-            graphics.PreferredBackBufferHeight = 480;
+
+            graphics.PreferredBackBufferWidth = 272;//sets the width of the screen
+            graphics.PreferredBackBufferHeight = 480;// sets the height of the screnn
         }
 
        
@@ -111,7 +121,7 @@ namespace SkiingGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             field = new PlayField();
-            //Objects
+            //Textures
             flagRighttexture = Content.Load<Texture2D>("BlueFlag");
             flagLefttexture = Content.Load<Texture2D>("RedFlag");
             skyMantexture = Content.Load<Texture2D>("skymanrevampwhite");

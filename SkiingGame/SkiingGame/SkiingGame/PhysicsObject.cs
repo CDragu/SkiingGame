@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace SkiingGame
 {
+    /// <summary>
+    /// pattern class for any object that need a box colider, same as a sprite in any other aspect
+    /// </summary>
     public class PhysicsObject : Sprite
     {
         
@@ -35,6 +38,11 @@ namespace SkiingGame
         {
             hitbox = new Rectangle((int)Position.X, (int)Position.Y, (int)Math.Ceiling(Texture.Width * Scale), (int)Math.Ceiling(Texture.Height * Scale));
         }
+        /// <summary>
+        /// checks for the collision 
+        /// </summary>
+        /// <param name="obj1"></param>
+        /// <param name="obj2"></param>
         public void PhysicsUpdate(PhysicsObject obj1, PhysicsObject obj2)
         {
                 if (obj1.hitbox.Intersects(obj2.hitbox))

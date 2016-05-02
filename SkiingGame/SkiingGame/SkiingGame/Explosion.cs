@@ -21,18 +21,22 @@ namespace SkiingGame
         {
             
         }
-
+        
+        /// <summary>
+        /// Particle system to create an explosion
+        /// </summary>
+        /// <returns></returns>
         public override Particle GenerateNewParticle()
         {
             Texture2D texture = textureList[random.Next(numberoftextures)];
             Vector2 position = this.position;
-            Vector2 velocity = new Vector2(random.Next(-20,20), -random.Next(1,3));
+            Vector2 velocity = new Vector2(random.Next(-20,20), -random.Next(1,3));// generates a random direction in a 180 degree arc
             float angle = 0;
             float angularVelocity = 0f;
             Color color = new Color(
                         (float)random.NextDouble(),
                         0,
-                        0);
+                        0);// generates a random red color to give variety to the exposion
             float size = 0.5f;
             int lifetime = particleLife;
 
@@ -47,6 +51,9 @@ namespace SkiingGame
             }
             
         }
+        /// <summary>
+        /// resets the posiiton of the explosion
+        /// </summary>
         public void reset()
         {
             this.position.Y = 460;

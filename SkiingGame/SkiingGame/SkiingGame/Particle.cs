@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework;
 
 namespace SkiingGame
 {
+    /// <summary>
+    /// simple pattern class for the particle in the partile system
+    /// </summary>
     public class Particle
     {
         private Texture2D texture;
@@ -77,7 +80,9 @@ namespace SkiingGame
             Size = size;
             Lifetime = lifetime;
         }
-
+        /// <summary>
+        /// decreses the lifetime and modifies the possition acording to the velocity
+        /// </summary>
         public void Update()
         {
             Lifetime--;

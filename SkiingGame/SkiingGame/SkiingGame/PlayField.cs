@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace SkiingGame
 {
+    /// <summary>
+    /// objects that has a list of Sprites that is used to save the game
+    /// </summary>
     public class PlayField
     {
         public List<Sprite> onthefield;

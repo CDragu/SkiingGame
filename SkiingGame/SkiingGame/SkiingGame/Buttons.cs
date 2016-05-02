@@ -27,12 +27,16 @@ namespace SkiingGame
             this.Transparency = transparency;
             this.isvisible = isvisible;
         }
-
+        /// <summary>
+        /// Call this method if you want to see if a butoon is pressesd
+        /// </summary>
+        /// <param name="ms"></param>
+        /// <returns></returns>
         public bool IsPressed(Microsoft.Xna.Framework.Input.MouseState ms)
         {
             if (isvisible == true)
             {   
-                if (ms.X < (this.Position.X + Texture.Width) && ms.X > (this.Position.X) && ms.Y > (this.Position.Y) && ms.Y < (this.Position.Y + Texture.Height) && ms.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
+                if (ms.X < (this.Position.X + Texture.Width) && ms.X > (this.Position.X) && ms.Y > (this.Position.Y) && ms.Y < (this.Position.Y + Texture.Height) && ms.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)//checs to see if the cursor is in the boundary of the buttton and if it is pressed
                         return true;
                     else
                         return false;
