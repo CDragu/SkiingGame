@@ -75,7 +75,7 @@
     <Compile Include="SkyMan.cs" />
     <Compile Include="SmartSprite.cs" />
     <Compile Include="SnowBolder.cs" />
-    <Compile Include="SnowTrail.cs" />
+    <Compile Include="Scraf.cs" />
     <Compile Include="Sprite.cs" />
   </ItemGroup>
   <ItemGroup>

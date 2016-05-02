@@ -131,7 +131,7 @@ namespace SkiingGame
             GameOvertexture = Content.Load<Texture2D>("GameOverScreen");
             particle = Content.Load<Texture2D>("SnowParticle");
 
-
+            //Initializing game objects
             screenHeight = GraphicsDevice.Viewport.Height;
             flag = new Flags(Vector2.Zero, 0.4f, flagRighttexture, 0, 1, field, screenHeight, distacebetwenflags, flagLefttexture);
             flag.SetupFlags(field);
@@ -147,6 +147,7 @@ namespace SkiingGame
             cheese.Initializecheese(field);
             Bond = new SmartSprite(new Vector2(30, 30), 1, Bondtexture, 0, 1, field);
             Gameover = new SmartSprite(new Vector2(-5,-50), 1, GameOvertexture, 0, 1, field);
+           
 
             //Sounds
             soundfile = TitleContainer.OpenStream(@"Content\buzz.wav");
@@ -189,21 +190,20 @@ namespace SkiingGame
         protected override void Update(GameTime gameTime)
         {
            
-            timer += 0.16f;//to be changed
+            timer += 0.16f;//approximately the time it takes a frame at 30FPS
             GraphicsDevice.Clear(Color.Black);
             Oldkeyboard = keyboard;
-            keyboard = Keyboard.GetState();
-            
+            keyboard = Keyboard.GetState();           
             MouseState mouse = Mouse.GetState();
             Debug.WriteLine(mouse.X);
             Debug.WriteLine(mouse.Y);
 
-            if (currentGameState == (int)GameState.Start)
+            if (currentGameState == (int)GameState.Start)//Main Menu where you can press start or wait to go into Attract mode
             {
                 Bond.Isvisible = true;
                 GraphicsDevice.Clear(Color.Black);
                 StartButton.Isvisible = true;
-                if (StartButton.IsPressed(mouse) == true)
+                if (StartButton.IsPressed(mouse) == true)//start the game
                 {
 
                     flag.Reset(field);
@@ -218,10 +218,11 @@ namespace SkiingGame
                     explosion.isvisible = true;
                     currentGameState = (int)GameState.Game;
                     Debug.Write("yes");
-                } else if (timer > 50)
+                } else if (timer > 50)//go to Attract mode
                 {
+                   
                     SaveLoad load = new SaveLoad(field, "LOAD", Scores, skyMan.scoreInfo);
-                    Scores = load.ReturnScores();
+                    Scores = load.ReturnScores();                   
                     skyMan.Reset();
                     flag.Reset(field);
                     boulder.Reset();
@@ -236,12 +237,12 @@ namespace SkiingGame
             }
 
             
-            if (currentGameState == (int)GameState.Atract)
+            if (currentGameState == (int)GameState.Atract)// Attract mode for showing off a part of the game
             {
                 GraphicsDevice.Clear(Color.Black);
                 flag.UpdateInAttract();
                 skyMan.UpdateInAttract();
-                if(keyboard.IsKeyDown(Keys.Space))
+                if(keyboard.IsKeyDown(Keys.Space))// go back to Main Menu
                 {
                     currentGameState = (int)GameState.Start;
                     timer = 0;
@@ -255,7 +256,7 @@ namespace SkiingGame
             }
 
 
-            if (currentGameState == (int)GameState.Game)
+            if (currentGameState == (int)GameState.Game)//The Main Loop for the Gameplay
             {
                 flag.Isvisible = true;
                 skyMan.Isvisible = true;
@@ -264,29 +265,26 @@ namespace SkiingGame
                 flag.IncreaseScore(skyMan);
                 skyMan.Update();
                 boulder.Update();
-                
                 explosion.position.Y += 1f;
-                if(explosion.position.Y > 1000)
+                if(explosion.position.Y < 1000)
                 {
-                    
-                }else
                     explosion.Update();
-                
+                }
                 cheese.Update();
                 
-                for (int i= 0; i < flag.numberOfFlags; i++)
+                for (int i= 0; i < flag.numberOfFlags; i++)//checks collisions with flags
                 {
                     skyMan.PhysicsUpdate(skyMan, flag.Phizicalchildren[i]) ;
                 }
-                for (int i = 0; i < cheese.maxcheese; i++)
+                for (int i = 0; i < cheese.maxcheese; i++)//checks collisions with chees
                 {
                     skyMan.PhysicsUpdate(skyMan, cheese.Phizicalchildren[i]);
                 }
-                for (int i = 0; i < boulder.maxboulders; i++)
+                for (int i = 0; i < boulder.maxboulders; i++)//checks collisions with boulders
                 {
                     skyMan.PhysicsUpdate(skyMan, boulder.Phizicalchildren[i]);
                 }
-                if (keyboard.IsKeyDown(Keys.N))
+                if (keyboard.IsKeyDown(Keys.N))//starting a new game
                 {
 
                     flag.Reset(field);
@@ -302,7 +300,7 @@ namespace SkiingGame
                     currentGameState = (int)GameState.Game;
                     Debug.Write("yes");
                 }
-                if (keyboard.IsKeyDown(Keys.R))
+                if (keyboard.IsKeyDown(Keys.R))//Load from file
                 {
                     SaveLoad load = new SaveLoad(field, "LOAD", Scores, skyMan.scoreInfo);
                     field = load.AfterLoad();
@@ -310,15 +308,15 @@ namespace SkiingGame
                     skyMan.lives = skyMan.scoreInfo.lives;
                     skyMan.score = skyMan.scoreInfo.score;
                 }
-                if (keyboard.IsKeyDown(Keys.S))
+                if (keyboard.IsKeyDown(Keys.S))//Saves to file
                 {
                     SaveLoad save = new SaveLoad(field, "SAVE", Scores, skyMan.scoreInfo);
                 }
-                if (keyboard.IsKeyDown(Keys.Q))
+                if (keyboard.IsKeyDown(Keys.Q))//Quits the game
                 {
                     Exit();
                 }
-                if (skyMan.lives <= 0)
+                if (skyMan.lives <= 0)//Moves game to the Insert name Screen
                 {
 
                     skyMan.Isvisible = false;
@@ -335,7 +333,7 @@ namespace SkiingGame
                     }
                     currentGameState = (int)GameState.GameOver;
                 }
-                if (keyboard.IsKeyDown(Keys.Escape))
+                if (keyboard.IsKeyDown(Keys.Escape))//Opens the Pause menu
                 {
                     cheese.Isvisible = false;
                     boulder.Isvisible = false;
@@ -349,17 +347,17 @@ namespace SkiingGame
 
 
 
-            if (currentGameState == (int)GameState.Pause)
+            if (currentGameState == (int)GameState.Pause)//menu for saving, loading and going back to main menu
             {
                 Save.Isvisible = true;
                 Load.Isvisible = true;
                 ResumeButton.Isvisible = true;
                 BackToStartButton.Isvisible = true;
-                if (Save.IsPressed(mouse) == true)
+                if (Save.IsPressed(mouse) == true)//save
                 {
                     SaveLoad save = new SaveLoad(field, "SAVE", Scores, skyMan.scoreInfo);
                 }
-                if (Load.IsPressed(mouse) == true)
+                if (Load.IsPressed(mouse) == true)//load
                 {
                     SaveLoad load = new SaveLoad(field, "LOAD",Scores, skyMan.scoreInfo);
                     field = load.AfterLoad();
@@ -367,7 +365,7 @@ namespace SkiingGame
                     skyMan.lives = skyMan.scoreInfo.lives;
                     skyMan.score = skyMan.scoreInfo.score;
                 }
-                if (ResumeButton.IsPressed(mouse) == true)
+                if (ResumeButton.IsPressed(mouse) == true)//gose back to game mode
                 {
                     Save.Isvisible = false;
                     Load.Isvisible = false;
@@ -377,7 +375,7 @@ namespace SkiingGame
                     boulder.Isvisible = true;
                     currentGameState = (int)GameState.Game;
                 }
-                if (BackToStartButton.IsPressed(mouse) == true)
+                if (BackToStartButton.IsPressed(mouse) == true)//back to main menu
                 {
                     Save.Isvisible = false;
                     Load.Isvisible = false;
@@ -389,31 +387,31 @@ namespace SkiingGame
                
             }
             
-            if (currentGameState == (int)GameState.GameOver)
+            if (currentGameState == (int)GameState.GameOver)//Screen for name input, when is done go to Attract mode
             {
                 
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < 3; i++)//used to update the letters dail
                 {                   
                     Letters[i].Update();
                 }
                 GraphicsDevice.Clear(Color.Black);
              
-                if ( keyboard.IsKeyDown(Keys.S) && (!keyboard.Equals(Oldkeyboard)))
+                if ( keyboard.IsKeyDown(Keys.S) && (!keyboard.Equals(Oldkeyboard)))//previous letter
                 {
                    Letters[count].Up();
                 }
-                if ( keyboard.IsKeyDown(Keys.W) && (!keyboard.Equals(Oldkeyboard)))
+                if ( keyboard.IsKeyDown(Keys.W) && (!keyboard.Equals(Oldkeyboard)))//next letter
                 {
                     Letters[count].Down();                  
                 }
-                if (keyboard.IsKeyDown(Keys.Enter) && (!keyboard.Equals(Oldkeyboard)))
+                if (keyboard.IsKeyDown(Keys.Enter) && (!keyboard.Equals(Oldkeyboard)))//used to go from the first dail to the next one
                 {
                     count++;
                 }
                 
 
                 
-                if (count == 3)
+                if (count == 3)//checks to see if all the letters are done
                 {
                     flag.Reset(field);
                     
@@ -430,14 +428,14 @@ namespace SkiingGame
                         Letters[i].Isvisible = false;
                         skyMan.name += Letters[i].CurrentLetter();
                     }
-                    SaveLoad load = new SaveLoad(field, "LOAD", Scores, skyMan.scoreInfo);
+                    SaveLoad load = new SaveLoad(field, "LOAD", Scores, skyMan.scoreInfo);//takes the high score form the file
                     Scores = load.ReturnScores();
                     Score currentscore = new Score();
                     currentscore.PlayerName = skyMan.name;
                     currentscore.PlayerScore = skyMan.score;
-                    Scores.Add(currentscore);
-                    Scores.Sort((a, b) => b.PlayerScore.CompareTo(a.PlayerScore));
-                    SaveLoad save = new SaveLoad(field, "SAVE", Scores, skyMan.scoreInfo);
+                    Scores.Add(currentscore);//adds this sesion high score to the list
+                    Scores.Sort((a, b) => b.PlayerScore.CompareTo(a.PlayerScore));//sorts the list
+                    SaveLoad save = new SaveLoad(field, "SAVE", Scores, skyMan.scoreInfo);//saves to file
                     skyMan.Reset();
                     
                 }
@@ -448,7 +446,7 @@ namespace SkiingGame
         }
 
        
-        protected override void Draw(GameTime gameTime)
+        protected override void Draw(GameTime gameTime)//draws the screen
         {
             spriteBatch.Begin();
 
@@ -460,7 +458,7 @@ namespace SkiingGame
             Enter.Draw(spriteBatch);                       
             flag.Draw(spriteBatch);
             flag.DrawInAttract(Scores, spriteBatch, font);
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 3; i++)//draws the letters one by one
             {
                 Letters[i].DrawWithAnimation(spriteBatch);
             }

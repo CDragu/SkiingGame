@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace SkiingGame
 {
+    /// <summary>
+    /// Like a sprite but with a isvisible variable, used to display  non interactible objects
+    /// </summary>
     class SmartSprite:Sprite
     {
         private bool isvisible = false;

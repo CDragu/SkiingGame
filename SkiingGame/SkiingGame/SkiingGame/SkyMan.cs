@@ -20,7 +20,7 @@ namespace SkiingGame
         public ScoreInfo scoreInfo;
         public int WindowHeight;
         public int WindowLenght;
-        public SnowTrail trail;
+        public Scraf trail;
 
         public struct ScoreInfo
         {
@@ -28,7 +28,7 @@ namespace SkiingGame
             public int lives;
         }
 
-        public bool Isvisible
+        public bool Isvisible//on/off variable to decide if the object will be drawn
         {
             get { return isvisible; }
             set { isvisible = value; }
@@ -48,8 +48,8 @@ namespace SkiingGame
             field.Addtoplayfield(this);
             lives = 3;
             score = 0;
-            InitializeAnimation(55, 134, 0.2f, 0.16f);
-            trail = new SnowTrail(particles, this.Position, 400, 1, 50);
+            InitializeAnimation(55, 134, 0.2f, 0.16f);//sets the heith and lenght of the sprite on a spritesheet
+            trail = new Scraf(particles, this.Position, 400, 1, 50);// adds the particle system
         }
 
         public override void Update()
@@ -58,6 +58,7 @@ namespace SkiingGame
             
             currentFrame = 0;
             KeyboardState keyboard = Keyboard.GetState();
+            //moving
              if (keyboard.IsKeyDown(Keys.Down)) //|| keyboard.IsKeyDown(Keys.S))
             {
                 this.Position += new Vector2(0, +speed);
@@ -82,6 +83,7 @@ namespace SkiingGame
                 currentFrame = 1;
                 
             }
+             //boundary restriciton
              if(this.Position.X < 0)
             {
                 this.Position +=new  Vector2(speed,0);
@@ -98,14 +100,13 @@ namespace SkiingGame
             {
                 this.Position += new Vector2(0, -speed);
             }
-            hitbox = new Rectangle((int)Position.X, (int)Position.Y, (int)Math.Ceiling(spriteWidth * Scale), (int)Math.Ceiling(spriteHeight * Scale));
+            hitbox = new Rectangle((int)Position.X, (int)Position.Y, (int)Math.Ceiling(spriteWidth * Scale), (int)Math.Ceiling(spriteHeight * Scale));//moves the rectangle with the object
             //ScoreUP();
 
             scoreInfo.score = this.score;
             scoreInfo.lives = this.lives;
             trail.position = Position + new Vector2(12,19);            
-            trail.Update();
-            //currentFrame = 0;
+            trail.Update();            
             SetSourceRect();
         }
 
@@ -113,22 +114,22 @@ namespace SkiingGame
         {
             if (Obj2.HasBeenHit == false)
             {
-                if(Obj2.type == "Cheese")
+                if(Obj2.type == "Cheese")//checks if it collide with a object named cheese
                 {
                     this.lives++;
                     this.score += 500;
                     Obj2.Position = new Vector2(+500, +500);
                 }
-                if (Obj2.type == "Boulder")
+                if (Obj2.type == "Boulder")//checks if it collide with a object named boulder
                 {
                     Hit();
                     Obj2.Position = new Vector2(+500, +500);
                 }
-                if (Obj2.type == "Flags")
+                if (Obj2.type == "Flags")//checks if it collide with a object named flags
                 {
                     Hit();
                 }                
-                Obj2.HasBeenHit = true;
+                Obj2.HasBeenHit = true;//marks the object as hit
             }
         }
 
@@ -137,7 +138,7 @@ namespace SkiingGame
             lives--;
         }
 
-        public void ScoreUP()
+        public void ScoreUP()//not used
         {
             timer++;
             if (timer > 10)
@@ -176,7 +177,7 @@ namespace SkiingGame
             }
         }
         
-        public void UpdateInAttract()
+        public void UpdateInAttract()//moves the sprite left and right according to a sin wave
         {
             time+=0.15f;
             Vector2 SinPosition = new Vector2((float)(Math.Sin(time) * 0.05f*time), -this.Texture.Height * Scale);
@@ -187,7 +188,7 @@ namespace SkiingGame
             trail.Update();
 
         }
-        public void Reset()
+        public void Reset()//resets the position, score and name of the player
         {
             this.Position = new Vector2(125, 300);
             lives = 3;

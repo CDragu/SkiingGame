@@ -7,7 +7,10 @@ using Microsoft.Xna.Framework;
 
 namespace SkiingGame
 {
-    public class SnowTrail : ParticleEmiter
+    /// <summary>
+    /// Custom particle effect for the scraf of the player
+    /// </summary>
+    public class Scraf : ParticleEmiter
     {
         public bool isvisible = true;
 
@@ -17,7 +20,7 @@ namespace SkiingGame
             set { isvisible = value; }
         }
 
-        public SnowTrail(Texture2D[] textures, Vector2 position, int maxparticles, int numberoftextures, int particleLife) : base(textures,position,maxparticles,numberoftextures,particleLife)
+        public Scraf(Texture2D[] textures, Vector2 position, int maxparticles, int numberoftextures, int particleLife) : base(textures,position,maxparticles,numberoftextures,particleLife)
         {
 
         }
@@ -26,13 +29,13 @@ namespace SkiingGame
         {
             Texture2D texture = textureList[random.Next(numberoftextures)];
             Vector2 position = this.position;
-            Vector2 velocity = new Vector2(0, 2f);
+            Vector2 velocity = new Vector2(0, 2f);//particle will go down the screen
             float angle = 0;
             float angularVelocity = 0f;
             Color color = new Color(
                         (float)random.NextDouble(),
                         (float)random.NextDouble(),
-                        (float)random.NextDouble());
+                        (float)random.NextDouble());//random color
             float size = 0.5f;
             int lifetime = particleLife;
 

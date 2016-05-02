@@ -133,8 +133,9 @@ namespace SkiingGame
         /// <param name="font"></param>
         public void DrawInAttract(List<RunSequence.Score> Scores, SpriteBatch spriteBatch, SpriteFont font)
         {
-            if (isvisible == true && atractmode == true)
+            if (isvisible == true && atractmode == true )
             {
+             if(Scores != null)
               for(int i  = 0; i < Scores.Count; i++)
                 {
                     spriteBatch.DrawString(font, (i+1) + "." + Scores[i].PlayerName.ToString() + "  " + Scores[i].PlayerScore.ToString(), new Vector2(90, 20+(i*10)), Color.White);

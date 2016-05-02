@@ -15,8 +15,8 @@ namespace SkiingGame
 {
     public class Sprite
     {
-        [Serializable]
-        public struct Info
+        [Serializable]//used so it will be easy to save to file
+        public struct Info//custom structure used to save the info of the sprite
         {
             public Vector2 position;
             public float scale;
@@ -31,7 +31,7 @@ namespace SkiingGame
         private float rotation;
         private float transparency;
         private Texture2D texture;
-        public List<Sprite> children;
+        public List<Sprite> children;//every child can move in another way or with the main object
         private bool hasbeenHit;
 
 
@@ -109,22 +109,22 @@ namespace SkiingGame
 
         public virtual void Draw(SpriteBatch spriteBatch) {
           
-            spriteBatch.Draw(texture, position, null, Color.White * transparency, rotation, Vector2.Zero, scale, SpriteEffects.None, 0f);
-            foreach (Sprite Children in this.children)
+            spriteBatch.Draw(texture, position, null, Color.White * transparency, rotation, Vector2.Zero, scale, SpriteEffects.None, 0f);//draw the main object
+            foreach (Sprite Children in this.children)//gose through the list and draws any of the children
             {
                 Vector2 ChildPosition = new Vector2(this.position.X + Children.position.X, this.position.Y + Children.position.Y);
                 spriteBatch.Draw(Children.texture, ChildPosition,null, Color.White * Children.transparency, Children.rotation,Vector2.Zero,Children.scale,SpriteEffects.None,0f);
             }            
         }
 
-        public virtual void Reset(RunSequence game) { }
+        
 
-        public virtual void Update()
+        public virtual void Update()//to be overriten
         {
             
         }
 
-        public Info Save()
+        public Info Save()// returns the structure filed with information
         {
             Info info = new Info();
             info.position = this.position;
@@ -133,7 +133,7 @@ namespace SkiingGame
             info.hasbeenHit = this.hasbeenHit;
             return info;
         }
-        public void Load(Info info)
+        public void Load(Info info)// replaces the current info with the ones form the file
         {
             this.position = info.position;
             this.scale = info.scale;
@@ -143,30 +143,30 @@ namespace SkiingGame
         /// <summary>
         /// Animation
         /// </summary>        
-        public int currentFrame = 0;
-        public int spriteWidth = 32;
-        public int spriteHeight = 48;
-        public float spriteSpeed = 0.2f;
-        public double time = 0;
-        public float frameduration = 0.16f;
+        public int currentFrame;
+        public int spriteWidth;
+        public int spriteHeight;
+        public float spriteSpeed ;
+        public double time;
+        public float frameduration;
         
         private Rectangle sourceRect;
 
-        public void SetSourceRect()
+        public void SetSourceRect()//calculates the rectangle that will be drawn on the screen
         {
             sourceRect = new Rectangle(currentFrame * spriteWidth, 0, spriteWidth, spriteHeight);
         }
 
-        public void InitializeAnimation(int spriteWidth, int spriteHeight, float spriteSpeed, float frameduration)
+        public void InitializeAnimation(int spriteWidth, int spriteHeight, float spriteSpeed, float frameduration)//sets the variables
         {
             this.spriteWidth = spriteWidth;
             this.spriteHeight = spriteHeight;
             this.spriteSpeed = spriteSpeed;
             this.frameduration = frameduration;
         }
-        public void RunAnimation(int startingframe ,int totalduration, float frameduration)// Runs an animation that takes totalduration frames and starts form starting frame. frameduratin is for time
+        public void RunAnimation(int startingframe ,int totalduration, float frameduration)// Runs an animation that takes totalduration frames and starts form starting frame. frameduratin is for time, not used
         {
-            time = time + 0.16f;//to do: change to time till last update
+            time = time + 0.16f;// time till last update on a 30FPS game
             if(currentFrame < startingframe)
             {
                 currentFrame = startingframe;
@@ -184,13 +184,13 @@ namespace SkiingGame
             }
 
         }
-        public void UpdateAnimation(int currentframe)
+        public void UpdateAnimation(int currentframe)//to be overriten
         {
             this.currentFrame = currentframe;
             SetSourceRect();
         }
 
-        public virtual void DrawWithAnimation(SpriteBatch spriteBatch)
+        public virtual void DrawWithAnimation(SpriteBatch spriteBatch)// drwas the sprite using the sourceRect informations
         {
 
             spriteBatch.Draw(texture, position, sourceRect, Color.White * transparency, rotation, Vector2.Zero, scale, SpriteEffects.None, 0f);
@@ -209,7 +209,7 @@ namespace SkiingGame
         public void PlayAudio()
         {
             soundEffectInstance.Apply3D(listener, emitter);
-            //soundEffectInstance.Play();
+            //soundEffectInstance.Play();//only when the sound will be implemented
         }
     
         

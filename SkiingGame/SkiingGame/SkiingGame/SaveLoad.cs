@@ -17,7 +17,7 @@ namespace SkiingGame
     {
         StorageDevice device;
         string containerName = "MyGamesStorage";
-        string filename = "mysave.sav";
+        string filename = "007AndtheMagicScraf.sav";
         PlayField field;
         List<Sprite.Info> Innerspritelist = new List<Sprite.Info>();
         List<RunSequence.Score> Scores;
@@ -36,7 +36,7 @@ namespace SkiingGame
         /// </summary>
         /// <param name="field"></param>
         /// <param name="action"></param>
-        public SaveLoad(PlayField field, string action, List<RunSequence.Score> score, SkyMan.ScoreInfo skyman )
+        public SaveLoad(PlayField field, string action, List<RunSequence.Score> score, SkyMan.ScoreInfo skyman )//makes a copy of everyting on the field and decides if to save or load
         {
             this.skyman = skyman;
             this.Scores = score;
@@ -52,13 +52,13 @@ namespace SkiingGame
             
             foreach (Sprite sprite in field.onthefield)
             {
-                tosave.Innerspritelist2.Add(sprite.Save());
+                tosave.Innerspritelist2.Add(sprite.Save());//add every Sprite to the list
             }
             tosave.Scores2 = Scores;
 
             tosave.skyman = skyman;
 
-            StorageDevice.BeginShowSelector(PlayerIndex.One, this.SaveToDevice, null);
+            StorageDevice.BeginShowSelector(PlayerIndex.One, this.SaveToDevice, null);//start the saving
           
         }
         
@@ -93,7 +93,7 @@ namespace SkiingGame
         }
         private void InitiateLoad()
         {         
-                StorageDevice.BeginShowSelector(PlayerIndex.One, this.LoadFromDevice, null);
+                StorageDevice.BeginShowSelector(PlayerIndex.One, this.LoadFromDevice, null);//initiates the loading
         }
 
         void LoadFromDevice(IAsyncResult result)
@@ -113,7 +113,7 @@ namespace SkiingGame
                 AfterLoad(); //Update the game based on the save game file
             }
         }
-        public PlayField AfterLoad()
+        public PlayField AfterLoad()//returns the field list 
         {
             int i = 0;
             foreach (Sprite sprite in field.onthefield)
@@ -123,20 +123,21 @@ namespace SkiingGame
                 sprite.Load(tosave.Innerspritelist2[i]);
                 i++;
                 }
-                catch
+                catch//if it dose not work means that there is not a save file and creates one
                 {
-
+                    InitiateSave();
+                    break;
                 }
                 
             }
                 return this.field;
         }
 
-        public List<RunSequence.Score> ReturnScores()
+        public List<RunSequence.Score> ReturnScores()//for score sync 
         {
             return tosave.Scores2;
         }
-        public SkyMan.ScoreInfo ReturnSkyMan()
+        public SkyMan.ScoreInfo ReturnSkyMan()//for player score and live sync
         {
             return tosave.skyman;
         }
