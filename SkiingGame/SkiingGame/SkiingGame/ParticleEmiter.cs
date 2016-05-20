@@ -35,7 +35,7 @@ namespace SkiingGame
         /// <summary>
         /// verifies the particles and decide if to destroy them or not
         /// </summary>
-        public void Update()
+        public virtual void Update()
         {
             
 
