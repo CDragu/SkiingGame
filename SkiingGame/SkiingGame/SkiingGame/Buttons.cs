@@ -26,6 +26,7 @@ namespace SkiingGame
             this.Texture = texture;
             this.Transparency = transparency;
             this.isvisible = isvisible;
+            this.isvisible = false;
         }
         /// <summary>
         /// Call this method if you want to see if a butoon is pressesd

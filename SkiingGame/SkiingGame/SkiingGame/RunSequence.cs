@@ -22,6 +22,7 @@ namespace SkiingGame
         
         enum GameState// according to this states different objects will be visible on the screen
         {
+            Comic,
             Start,
             Atract,
             Pause,
@@ -70,15 +71,18 @@ namespace SkiingGame
         Texture2D Alphabet;
         Texture2D Bondtexture;
         Texture2D GameOvertexture;
+        Texture2D Comicpage;
 
         SmartSprite Bond;
         SmartSprite Gameover;
+        SmartSprite ComicPage;
         Buttons StartButton;
         Buttons ResumeButton;
         Buttons BackToStartButton;
         Buttons Save;
         Buttons Load;
         Buttons Enter;
+        Buttons SkipComic;
         float timer;
         SpriteFont font;
         Letter[] Letters;
@@ -118,6 +122,7 @@ namespace SkiingGame
        
         protected override void LoadContent()
         {
+           
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             field = new PlayField();
@@ -127,9 +132,10 @@ namespace SkiingGame
             skyMantexture = Content.Load<Texture2D>("skymanrevampwhite");
             cheesetexture = Content.Load<Texture2D>("Cheese");
             bouldertexture = Content.Load<Texture2D>("Boulder");
-            Bondtexture = Content.Load<Texture2D>("BondFAce");
+            Bondtexture = Content.Load<Texture2D>("NewBond");
             GameOvertexture = Content.Load<Texture2D>("GameOverScreen");
             particle = Content.Load<Texture2D>("SnowParticle");
+            Comicpage = Content.Load<Texture2D>("Comic Strip");
 
             //Initializing game objects
             screenHeight = GraphicsDevice.Viewport.Height;
@@ -140,14 +146,18 @@ namespace SkiingGame
             Particles[0] = particle;
             skyMan = new SkyMan(new Vector2(100, 100), 0.4f, skyMantexture, 0, 1, field, GraphicsDevice.Viewport.Height, GraphicsDevice.Viewport.Width, Particles);
 
+            SaveLoad load = new SaveLoad(field, "LOAD", Scores, skyMan.scoreInfo);// ideal place to put the load so that the highscores will be persistent but the places of other objects wont be disturbed
+            Scores = load.ReturnScores();
+
             explosion = new Explosion(Particles, new Vector2(120, 460), 400, 1, 50);
             boulder = new SnowBolder(Vector2.Zero, 0.1f, bouldertexture, 0, 1, field, 20);
             boulder.InitializeBoulders(field);
             cheese = new Cheese(Vector2.Zero, 0.1f, cheesetexture, 0, 1, field, 10);
             cheese.Initializecheese(field);
-            Bond = new SmartSprite(new Vector2(30, 30), 1, Bondtexture, 0, 1, field);
+            Bond = new SmartSprite(new Vector2(55, 90), 0.75f, Bondtexture, 0, 1, field);
             Gameover = new SmartSprite(new Vector2(-5,-50), 1, GameOvertexture, 0, 1, field);
-           
+            ComicPage = new SmartSprite(new Vector2(0, 0), 1, Comicpage, 0, 1, field);
+
 
             //Sounds
             soundfile = TitleContainer.OpenStream(@"Content\buzz.wav");
@@ -175,8 +185,11 @@ namespace SkiingGame
             {
                 Letters[i] = new Letter(new Vector2(GraphicsDevice.Viewport.Width / 4 * (i + 1) - 20, GraphicsDevice.Viewport.Height / 2 - startButtonTexture.Height / 2), 1, Alphabet, null, 0, 1, field);
             }
+            SkipComic = new Buttons(new Vector2(190, 430), 0.7f, startButtonTexture, 0, 1, field, true);
 
-            currentGameState = (int)GameState.Start;           
+            currentGameState = (int)GameState.Start;
+            //SaveLoad load = new SaveLoad(field, "LOAD", Scores, skyMan.scoreInfo);
+            //Scores = load.ReturnScores();
         }
 
        
@@ -200,29 +213,23 @@ namespace SkiingGame
 
             if (currentGameState == (int)GameState.Start)//Main Menu where you can press start or wait to go into Attract mode
             {
+
                 Bond.Isvisible = true;
                 GraphicsDevice.Clear(Color.Black);
                 StartButton.Isvisible = true;
                 if (StartButton.IsPressed(mouse) == true)//start the game
                 {
-
-                    flag.Reset(field);
-                    explosion.reset();
-                    skyMan.Reset();
-                    boulder.Reset();
-                    cheese.Reset();
-                    cheese.Isvisible = true;
-                    boulder.Isvisible = true;
-                    StartButton.Isvisible = false;
                     Bond.Isvisible = false;
-                    explosion.isvisible = true;
-                    currentGameState = (int)GameState.Game;
+                    ComicPage.Isvisible = true;
+                    StartButton.Isvisible = false;
+                    SkipComic.Isvisible = true;
+                    currentGameState = (int)GameState.Comic;
                     Debug.Write("yes");
                 } else if (timer > 50)//go to Attract mode
                 {
-                   
+
                     SaveLoad load = new SaveLoad(field, "LOAD", Scores, skyMan.scoreInfo);
-                    Scores = load.ReturnScores();                   
+                    Scores = load.ReturnScores();
                     skyMan.Reset();
                     flag.Reset(field);
                     boulder.Reset();
@@ -236,6 +243,29 @@ namespace SkiingGame
                 }
             }
 
+            if(currentGameState == (int)GameState.Comic)// Display the comic and a button to go
+            {
+               
+                //GraphicsDevice.Clear(Color.Black);
+                SkipComic.Isvisible = true;
+                ComicPage.Isvisible = true;
+                if (SkipComic.IsPressed(mouse) == true)
+                {
+                    flag.Reset(field);
+                    explosion.reset();
+                    skyMan.Reset();
+                    boulder.Reset();
+                    cheese.Reset();
+                    cheese.Isvisible = true;
+                    boulder.Isvisible = true;
+                    StartButton.Isvisible = false;
+                    Bond.Isvisible = false;
+                    explosion.isvisible = true;
+                    ComicPage.Isvisible = false;
+                    SkipComic.Isvisible = false;
+                    currentGameState = (int)GameState.Game;
+                }
+            }
             
             if (currentGameState == (int)GameState.Atract)// Attract mode for showing off a part of the game
             {
@@ -468,8 +498,9 @@ namespace SkiingGame
             Gameover.Draw(spriteBatch);
             explosion.Draw(spriteBatch);
             skyMan.DrawWithAnimation(spriteBatch);
-            skyMan.DrawScore(spriteBatch, font);
-
+            skyMan.DrawScore(spriteBatch, font);            
+            ComicPage.Draw(spriteBatch);
+            SkipComic.Draw(spriteBatch);
             spriteBatch.End();
             base.Draw(gameTime);
         }

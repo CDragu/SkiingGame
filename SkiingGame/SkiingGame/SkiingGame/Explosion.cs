@@ -21,7 +21,37 @@ namespace SkiingGame
         {
             
         }
-        
+        public bool oneburst = false;
+        public override void Update()
+        {
+            int burstammount = 20;
+            for (int i = 0; i < maxparticles && oneburst == false ; i++)//fills the list with particles
+            {
+                if (particleList[i] == null)
+                {
+                    particleList[i] = GenerateNewParticle();
+                    burstammount--;
+                   
+                }
+                if(burstammount == 0)
+                    break;
+                if (i == maxparticles - 1)
+                    oneburst = true;
+            }
+
+            for (int particle = 0; particle < maxparticles; particle++)//checks the lifetime of the particle
+            {
+                if (particleList[particle] != null)
+                {
+                    particleList[particle].Update();
+                    if (particleList[particle].Lifetime <= 0)
+                    {
+                        particleList[particle] = null;
+                    }
+                }
+
+            }
+        }
         /// <summary>
         /// Particle system to create an explosion
         /// </summary>
