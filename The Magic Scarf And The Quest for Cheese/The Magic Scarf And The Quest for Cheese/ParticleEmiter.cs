@@ -13,6 +13,13 @@ namespace The_Magic_Scarf_And_The_Quest_for_Cheese
         public Texture2D[] textureList;
         public int numberoftextures;
         public int particleLife;
+        public bool isvisible = false;
+
+        public bool Isvisible
+        {
+            get { return isvisible; }
+            set { isvisible = value; }
+        }
 
         public ParticleEmiter(Texture2D[] textures, Vector2 position, int maxparticles, int numberoftextures, int particleLife)
         {
@@ -29,7 +36,7 @@ namespace The_Magic_Scarf_And_The_Quest_for_Cheese
         /// <summary>
         /// verifies the particles and decide if to destroy them or not
         /// </summary>
-        public void Update()
+        public virtual void Update()
         {
 
 

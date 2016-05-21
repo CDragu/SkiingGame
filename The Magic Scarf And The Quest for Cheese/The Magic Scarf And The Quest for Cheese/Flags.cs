@@ -61,10 +61,8 @@ namespace The_Magic_Scarf_And_The_Quest_for_Cheese
                 Phizicalchildren[i + 1].Update();
             }
             distance -= 0.02f;
-            if(time < 10)
-                time += 0.16f;// aproximate time for a frame
-            if(speed < 5)
-                speed += time * 0.000001f;//increasing the speed over time
+            time += 0.16f;// aproximate time for a frame
+            speed += time * 0.000001f;//increasing the speed over time
         }
 
         /// <summary>
@@ -135,15 +133,11 @@ namespace The_Magic_Scarf_And_The_Quest_for_Cheese
         /// <param name="Scores"></param>
         /// <param name="spriteBatch"></param>
         /// <param name="font"></param>
-        public void DrawInAttract(List<Game1.Score> Scores, SpriteBatch spriteBatch, SpriteFont font)
+        public void DrawInAttract( SpriteBatch spriteBatch, SpriteFont font)
         {
             if (isvisible == true && atractmode == true)
             {
-                if (Scores != null)
-                    for (int i = 0; i < Scores.Count; i++)
-                    {
-                        spriteBatch.DrawString(font, (i + 1) + "." + Scores[i].PlayerName.ToString() + "  " + Scores[i].PlayerScore.ToString(), new Vector2(90, 20 + (i * 10)), Color.White);
-                    }
+               
                 spriteBatch.DrawString(font, "Press Space To Try Agian!!", new Vector2(20, 400), Color.White);
             }
         }

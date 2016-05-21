@@ -191,7 +191,7 @@ namespace The_Magic_Scarf_And_The_Quest_for_Cheese
         {
             if (Isvisible == true)
             {
-                spriteBatch.DrawString(font, "Score: " + score.ToString(), new Vector2(40, 450), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
+               
                 spriteBatch.DrawString(font, "Lives: " + lives.ToString(), new Vector2(170, 450), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
             }
         }

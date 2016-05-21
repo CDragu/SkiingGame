@@ -6,19 +6,43 @@ namespace The_Magic_Scarf_And_The_Quest_for_Cheese
 {
     class Explosion : ParticleEmiter
     {
-        public bool isvisible = false;
 
-        public bool Isvisible
-        {
-            get { return isvisible; }
-            set { isvisible = value; }
-        }
 
         public Explosion(Texture2D[] textures, Vector2 position, int maxparticles, int numberoftextures, int particleLife) : base(textures, position, maxparticles, numberoftextures, particleLife)
         {
 
         }
+        public bool oneburst = false;
+        public override void Update()
+        {
+            int burstammount = 20;
+            for (int i = 0; i < maxparticles && oneburst == false; i++)//fills the list with particles
+            {
+                if (particleList[i] == null)
+                {
+                    particleList[i] = GenerateNewParticle();
+                    burstammount--;
 
+                }
+                if (burstammount == 0)
+                    break;
+                if (i == maxparticles - 1)
+                    oneburst = true;
+            }
+
+            for (int particle = 0; particle < maxparticles; particle++)//checks the lifetime of the particle
+            {
+                if (particleList[particle] != null)
+                {
+                    particleList[particle].Update();
+                    if (particleList[particle].Lifetime <= 0)
+                    {
+                        particleList[particle] = null;
+                    }
+                }
+
+            }
+        }
         /// <summary>
         /// Particle system to create an explosion
         /// </summary>
@@ -55,6 +79,7 @@ namespace The_Magic_Scarf_And_The_Quest_for_Cheese
         {
             this.position.Y = 460;
         }
+
 
     }
 }
