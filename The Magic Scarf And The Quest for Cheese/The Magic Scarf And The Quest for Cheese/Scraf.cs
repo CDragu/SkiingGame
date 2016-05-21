@@ -8,16 +8,10 @@ using Microsoft.Xna.Framework;
 
 namespace The_Magic_Scarf_And_The_Quest_for_Cheese
 {
-    class Scraf : ParticleEmiter
+    public class Scraf : ParticleEmiter
     {
 
-        public bool isvisible = true;
-
-        public bool Isvisible
-        {
-            get { return isvisible; }
-            set { isvisible = value; }
-        }
+        
 
         public Scraf(Texture2D[] textures, Vector2 position, int maxparticles, int numberoftextures, int particleLife) : base(textures, position, maxparticles, numberoftextures, particleLife)
         {

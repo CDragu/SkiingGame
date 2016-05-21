@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace The_Magic_Scarf_And_The_Quest_for_Cheese
 {
-    class SkyMan : PhysicsObject
+    public class SkyMan : PhysicsObject
     {
         private bool isvisible;
         public int speed = 2;
@@ -110,6 +110,25 @@ namespace The_Magic_Scarf_And_The_Quest_for_Cheese
             SetSourceRect();
         }
 
+        public void up()
+        {
+            this.Position += new Vector2(0, -speed);
+        }
+        public void down()
+        {
+            this.Position += new Vector2(0, +speed);
+        }
+        public void left()
+        {
+            this.Position += new Vector2(-speed, 0);
+            currentFrame = 2;
+        }
+        public void right()
+        {
+            this.Position += new Vector2(+speed, 0);
+            currentFrame = 1;
+        }
+
         public override void Collision(PhysicsObject Obj1, PhysicsObject Obj2)
         {
             if (Obj2.HasBeenHit == false)
@@ -172,7 +191,7 @@ namespace The_Magic_Scarf_And_The_Quest_for_Cheese
         {
             if (Isvisible == true)
             {
-                spriteBatch.DrawString(font, "Score: " + score.ToString(), new Vector2(40, 450), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
+               
                 spriteBatch.DrawString(font, "Lives: " + lives.ToString(), new Vector2(170, 450), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
             }
         }

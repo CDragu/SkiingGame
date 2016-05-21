@@ -21,7 +21,7 @@ namespace The_Magic_Scarf_And_The_Quest_for_Cheese
             this.Rotation = rotation;
             this.Texture = texture;
             this.Transparency = transparency;
-
+            this.isvisible = false;
             children = new List<Sprite>();
 
             field.Addtoplayfield(this);

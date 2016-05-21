@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace The_Magic_Scarf_And_The_Quest_for_Cheese
 {
-    class Particle
+    public class Particle
     {
         private Texture2D texture;
         private Vector2 position;

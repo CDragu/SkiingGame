@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace The_Magic_Scarf_And_The_Quest_for_Cheese
 {
-    class PhysicsObject: Sprite
+    public class PhysicsObject: Sprite
     {
         public Rectangle hitbox;
         public List<PhysicsObject> Phizicalchildren;

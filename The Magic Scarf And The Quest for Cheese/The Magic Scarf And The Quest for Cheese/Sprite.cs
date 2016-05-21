@@ -8,6 +8,7 @@ namespace The_Magic_Scarf_And_The_Quest_for_Cheese
 {
     public class Sprite
     {
+        
         public struct Info//custom structure used to save the info of the sprite
         {
             public Vector2 position;
@@ -19,13 +20,13 @@ namespace The_Magic_Scarf_And_The_Quest_for_Cheese
         /// <summary>
         /// Normal Variables
         /// </summary>
-        private Vector2 position;
-        private float scale;
-        private float rotation;
-        private float transparency;
-        private Texture2D texture;
+        public Vector2 position;
+        public float scale;
+        public float rotation;
+        public float transparency;
+        public Texture2D texture;
         public List<Sprite> children;//every child can move in another way or with the main object
-        private bool hasbeenHit;
+        public bool hasbeenHit;
         /// <summary>
         /// Sound Variables
         /// </summary>

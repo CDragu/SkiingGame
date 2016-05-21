@@ -23,6 +23,7 @@ namespace The_Magic_Scarf_And_The_Quest_for_Cheese
             this.Texture = texture;
             this.Transparency = transparency;
             this.isvisible = isvisible;
+            
         }
         /// <summary>
         /// Call this method if you want to see if a butoon is pressesd
@@ -35,7 +36,7 @@ namespace The_Magic_Scarf_And_The_Quest_for_Cheese
             {
                 foreach (TouchLocation tl in touchCollection)
                 
-                    if ((ms.X < (this.Position.X + Texture.Width) && ms.X > (this.Position.X) && ms.Y > (this.Position.Y) && ms.Y < (this.Position.Y + Texture.Height) && ms.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed) || (tl.Position.X < (this.Position.X + Texture.Width) && tl.Position.X > (this.Position.X) && tl.Position.Y > (this.Position.Y) && tl.Position.Y < (this.Position.Y + Texture.Height) && ((tl.State == TouchLocationState.Pressed) || (tl.State == TouchLocationState.Moved))))
+                    if ((ms.X < (this.Position.X + Texture.Width*scale) && ms.X > (this.Position.X) && ms.Y > (this.Position.Y) && ms.Y < (this.Position.Y + Texture.Height * scale) && ms.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed) || (tl.Position.X < (this.Position.X + Texture.Width * scale) && tl.Position.X > (this.Position.X) && tl.Position.Y > (this.Position.Y) && tl.Position.Y < (this.Position.Y + Texture.Height * scale) && ((tl.State == TouchLocationState.Pressed) || (tl.State == TouchLocationState.Moved))))
                     { return true; }
                 
 
