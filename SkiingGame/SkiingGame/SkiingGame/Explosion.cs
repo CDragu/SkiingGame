@@ -9,13 +9,7 @@ namespace SkiingGame
 {
     class Explosion : ParticleEmiter
     {
-        public bool isvisible = false;
-
-        public bool Isvisible
-        {
-            get { return isvisible; }
-            set { isvisible = value; }
-        }
+        
 
         public Explosion(Texture2D[] textures, Vector2 position, int maxparticles, int numberoftextures, int particleLife) : base(textures,position,maxparticles,numberoftextures,particleLife)
         {

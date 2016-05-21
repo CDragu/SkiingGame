@@ -51,6 +51,7 @@ namespace SkiingGame
         Cheese cheese;
 
         Explosion explosion;
+        SmallExplosion smallexplosion;
 
         /// <summary>
         /// Sound 
@@ -150,6 +151,7 @@ namespace SkiingGame
             Scores = load.ReturnScores();
 
             explosion = new Explosion(Particles, new Vector2(120, 460), 400, 1, 50);
+            smallexplosion = new SmallExplosion(Particles, new Vector2(200, 200), 100, 1, 20);
             boulder = new SnowBolder(Vector2.Zero, 0.1f, bouldertexture, 0, 1, field, 20);
             boulder.InitializeBoulders(field);
             cheese = new Cheese(Vector2.Zero, 0.1f, cheesetexture, 0, 1, field, 10);
@@ -213,6 +215,11 @@ namespace SkiingGame
 
             if (currentGameState == (int)GameState.Start)//Main Menu where you can press start or wait to go into Attract mode
             {
+                //Implementation of the small explosive animation, call reset to start the animation again
+                smallexplosion.reset();
+                smallexplosion.isvisible = true;
+                smallexplosion.Update();
+
 
                 Bond.Isvisible = true;
                 GraphicsDevice.Clear(Color.Black);
@@ -264,6 +271,7 @@ namespace SkiingGame
                     ComicPage.Isvisible = false;
                     SkipComic.Isvisible = false;
                     currentGameState = (int)GameState.Game;
+                    SaveLoad save = new SaveLoad(field, "SAVE", Scores, skyMan.scoreInfo);
                 }
             }
             
@@ -300,6 +308,9 @@ namespace SkiingGame
                 {
                     explosion.Update();
                 }
+
+                
+
                 cheese.Update();
                 
                 for (int i= 0; i < flag.numberOfFlags; i++)//checks collisions with flags
@@ -458,8 +469,10 @@ namespace SkiingGame
                         Letters[i].Isvisible = false;
                         skyMan.name += Letters[i].CurrentLetter();
                     }
+                   
                     SaveLoad load = new SaveLoad(field, "LOAD", Scores, skyMan.scoreInfo);//takes the high score form the file
                     Scores = load.ReturnScores();
+                   
                     Score currentscore = new Score();
                     currentscore.PlayerName = skyMan.name;
                     currentscore.PlayerScore = skyMan.score;
@@ -501,6 +514,8 @@ namespace SkiingGame
             skyMan.DrawScore(spriteBatch, font);            
             ComicPage.Draw(spriteBatch);
             SkipComic.Draw(spriteBatch);
+            smallexplosion.Draw(spriteBatch);
+
             spriteBatch.End();
             base.Draw(gameTime);
         }

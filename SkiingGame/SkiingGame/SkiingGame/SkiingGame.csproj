@@ -73,6 +73,7 @@
     <Compile Include="RunSequence.cs" />
     <Compile Include="SaveLoad.cs" />
     <Compile Include="SkyMan.cs" />
+    <Compile Include="SmallExplosion.cs" />
     <Compile Include="SmartSprite.cs" />
     <Compile Include="SnowBolder.cs" />
     <Compile Include="Scraf.cs" />

@@ -19,6 +19,13 @@ namespace SkiingGame
         public Texture2D[] textureList;
         public int numberoftextures;
         public int particleLife;
+        public bool isvisible = false;
+
+        public bool Isvisible
+        {
+            get { return isvisible; }
+            set { isvisible = value; }
+        }
 
         public ParticleEmiter(Texture2D[] textures, Vector2 position, int maxparticles, int numberoftextures, int particleLife)
         {
@@ -85,13 +92,16 @@ namespace SkiingGame
         
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            
-            for (int i = 0; i < maxparticles; i++)
+            if (isvisible == true)
             {
-                if(particleList[i] != null)
-                particleList[i].Draw(spriteBatch);
+
+
+                for (int i = 0; i < maxparticles; i++)
+                {
+                    if (particleList[i] != null)
+                        particleList[i].Draw(spriteBatch);
+                }
             }
-            
         }
     }
 }

@@ -12,17 +12,11 @@ namespace SkiingGame
     /// </summary>
     public class Scraf : ParticleEmiter
     {
-        public bool isvisible = true;
-
-        public bool Isvisible
-        {
-            get { return isvisible; }
-            set { isvisible = value; }
-        }
+       
 
         public Scraf(Texture2D[] textures, Vector2 position, int maxparticles, int numberoftextures, int particleLife) : base(textures,position,maxparticles,numberoftextures,particleLife)
         {
-
+            isvisible = true;
         }
 
         public override Particle GenerateNewParticle()
