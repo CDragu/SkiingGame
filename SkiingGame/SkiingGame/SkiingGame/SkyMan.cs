@@ -12,7 +12,7 @@ namespace SkiingGame
     {
         
         private bool isvisible;
-        public int speed = 2;
+        public float speed = 2;
         public int lives;
         public int score;
         public int timer;
@@ -21,6 +21,7 @@ namespace SkiingGame
         public int WindowHeight;
         public int WindowLenght;
         public Scraf trail;
+        public Wings wing;
 
         public struct ScoreInfo
         {
@@ -50,6 +51,8 @@ namespace SkiingGame
             score = 0;
             InitializeAnimation(55, 134, 0.2f, 0.16f);//sets the heith and lenght of the sprite on a spritesheet
             trail = new Scraf(particles, this.Position, 400, 1, 50);// adds the particle system
+            wing = new Wings(particles, this.Position, 200, 1, 5);
+            wing.oneburst = true;
         }
 
         public override void Update()
@@ -106,7 +109,11 @@ namespace SkiingGame
             scoreInfo.score = this.score;
             scoreInfo.lives = this.lives;
             trail.position = Position + new Vector2(12,19);            
-            trail.Update();            
+            trail.Update();
+            wing.Update();
+            wing.position = Position + new Vector2(this.spriteWidth/5,this.spriteHeight/4);
+            wing.isvisible = this.isvisible;
+                      
             SetSourceRect();
         }
 
@@ -119,6 +126,9 @@ namespace SkiingGame
                     this.lives++;
                     this.score += 500;
                     Obj2.Position = new Vector2(+500, +500);
+                    wing.reset();
+                    speed += 0.3f;
+                    time++;
                 }
                 if (Obj2.type == "Boulder")//checks if it collide with a object named boulder
                 {
@@ -164,6 +174,7 @@ namespace SkiingGame
             {
                 base.DrawWithAnimation(spriteBatch);
                 trail.Draw(spriteBatch);
+                wing.Draw(spriteBatch);
             }
                 
         }

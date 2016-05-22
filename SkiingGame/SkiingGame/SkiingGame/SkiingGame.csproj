@@ -78,6 +78,7 @@
     <Compile Include="SnowBolder.cs" />
     <Compile Include="Scraf.cs" />
     <Compile Include="Sprite.cs" />
+    <Compile Include="Wings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
