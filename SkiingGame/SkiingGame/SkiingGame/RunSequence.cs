@@ -22,6 +22,7 @@ namespace SkiingGame
         
         enum GameState// according to this states different objects will be visible on the screen
         {
+            Win,
             Comic,
             Start,
             Atract,
@@ -35,6 +36,7 @@ namespace SkiingGame
         Texture2D flagLefttexture;
         Texture2D skyMantexture;
         Texture2D cheesetexture;
+        Texture2D rockettexture;
         Texture2D bouldertexture;
 
         /// <summary>
@@ -49,6 +51,7 @@ namespace SkiingGame
 
         SnowBolder boulder;
         Cheese cheese;
+        Rocket rokets;
 
         Explosion explosion;
         SmallExplosion smallexplosion;
@@ -59,6 +62,7 @@ namespace SkiingGame
         Stream soundfile;
         SoundEffect soundEffect;
         SoundEffectInstance soundEffectInstance;
+        SoundEffectInstance[] soundEffects;
 
         /// <summary>
         /// Menus
@@ -85,6 +89,8 @@ namespace SkiingGame
         Buttons Enter;
         Buttons SkipComic;
         float timer;
+        float timetillwin;
+        bool gamefinished = false;
         SpriteFont font;
         Letter[] Letters;
         
@@ -132,11 +138,19 @@ namespace SkiingGame
             flagLefttexture = Content.Load<Texture2D>("RedFlag");
             skyMantexture = Content.Load<Texture2D>("skymanrevampwhite");
             cheesetexture = Content.Load<Texture2D>("Cheese");
+            rockettexture = Content.Load<Texture2D>("Rocket");
             bouldertexture = Content.Load<Texture2D>("Boulder");
             Bondtexture = Content.Load<Texture2D>("NewBond");
             GameOvertexture = Content.Load<Texture2D>("GameOverScreen");
             particle = Content.Load<Texture2D>("SnowParticle");
             Comicpage = Content.Load<Texture2D>("Comic Strip");
+
+            //Sounds
+            soundfile = TitleContainer.OpenStream(@"Content\Explosion2.wav");
+            soundEffect = SoundEffect.FromStream(soundfile);
+            soundEffectInstance = soundEffect.CreateInstance();
+            SoundEffect[] soundEffects = new SoundEffect[5];// add sounds that you want to use here and then you can use them in skyman
+            soundEffects[0] = soundEffect;
 
             //Initializing game objects
             screenHeight = GraphicsDevice.Viewport.Height;
@@ -145,7 +159,7 @@ namespace SkiingGame
 
             Texture2D[] Particles = new Texture2D[1];
             Particles[0] = particle;
-            skyMan = new SkyMan(new Vector2(100, 100), 0.4f, skyMantexture, 0, 1, field, GraphicsDevice.Viewport.Height, GraphicsDevice.Viewport.Width, Particles);
+            skyMan = new SkyMan(new Vector2(100, 100), 0.4f, skyMantexture,soundEffects, 0, 1, field, GraphicsDevice.Viewport.Height, GraphicsDevice.Viewport.Width, Particles);
 
             SaveLoad load = new SaveLoad(field, "LOAD", Scores, skyMan.scoreInfo);// ideal place to put the load so that the highscores will be persistent but the places of other objects wont be disturbed
             Scores = load.ReturnScores();
@@ -156,15 +170,14 @@ namespace SkiingGame
             boulder.InitializeBoulders(field);
             cheese = new Cheese(Vector2.Zero, 0.1f, cheesetexture, 0, 1, field, 10);
             cheese.Initializecheese(field);
+            rokets = new Rocket(Vector2.Zero, 20, rockettexture, 0, 1, field, 10);
+            rokets.Initialize(field);
             Bond = new SmartSprite(new Vector2(55, 90), 0.75f, Bondtexture, 0, 1, field);
             Gameover = new SmartSprite(new Vector2(-5,-50), 1, GameOvertexture, 0, 1, field);
             ComicPage = new SmartSprite(new Vector2(0, 0), 1, Comicpage, 0, 1, field);
 
 
-            //Sounds
-            soundfile = TitleContainer.OpenStream(@"Content\buzz.wav");
-            soundEffect = SoundEffect.FromStream(soundfile);
-            soundEffectInstance = soundEffect.CreateInstance();
+          
 
             //Buttons
             startButtonTexture = Content.Load<Texture2D>("Go");
@@ -216,9 +229,9 @@ namespace SkiingGame
             if (currentGameState == (int)GameState.Start)//Main Menu where you can press start or wait to go into Attract mode
             {
                 //Implementation of the small explosive animation, call reset to start the animation again
-                smallexplosion.reset();
-                smallexplosion.isvisible = true;
-                smallexplosion.Update();
+                //smallexplosion.reset();
+                //smallexplosion.isvisible = true;
+                //smallexplosion.Update();
 
 
                 Bond.Isvisible = true;
@@ -241,6 +254,7 @@ namespace SkiingGame
                     flag.Reset(field);
                     boulder.Reset();
                     cheese.Reset();
+                    rokets.Reset();
                     StartButton.Isvisible = false;
                     flag.Isvisible = true;
                     skyMan.Isvisible = true;
@@ -264,6 +278,8 @@ namespace SkiingGame
                     boulder.Reset();
                     cheese.Reset();
                     cheese.Isvisible = true;
+                    rokets.Reset();
+                    rokets.Isvisible = true;
                     boulder.Isvisible = true;
                     StartButton.Isvisible = false;
                     Bond.Isvisible = false;
@@ -296,6 +312,7 @@ namespace SkiingGame
 
             if (currentGameState == (int)GameState.Game)//The Main Loop for the Gameplay
             {
+                timetillwin += 0.16f;
                 flag.Isvisible = true;
                 skyMan.Isvisible = true;
                 GraphicsDevice.Clear(Color.Black);
@@ -308,10 +325,20 @@ namespace SkiingGame
                 {
                     explosion.Update();
                 }
-
+                if(timetillwin > 800 && gamefinished == false)
+                {
+                    cheese.Isvisible = false;
+                    rokets.Isvisible = false;
+                    boulder.Isvisible = false;
+                    skyMan.Isvisible = false;
+                    flag.Isvisible = false;
+                    explosion.isvisible = false;
+                    currentGameState = (int)GameState.Win;
+                }
                 
 
                 cheese.Update();
+                rokets.Update();
                 
                 for (int i= 0; i < flag.numberOfFlags; i++)//checks collisions with flags
                 {
@@ -320,6 +347,10 @@ namespace SkiingGame
                 for (int i = 0; i < cheese.maxcheese; i++)//checks collisions with chees
                 {
                     skyMan.PhysicsUpdate(skyMan, cheese.Phizicalchildren[i]);
+                }
+                for( int i = 0; i < rokets.maxrockets; i++)
+                {
+                    skyMan.PhysicsUpdate(skyMan, rokets.Phizicalchildren[i]);
                 }
                 for (int i = 0; i < boulder.maxboulders; i++)//checks collisions with boulders
                 {
@@ -334,6 +365,8 @@ namespace SkiingGame
                     boulder.Reset();
                     cheese.Reset();
                     cheese.Isvisible = true;
+                    rokets.Reset();
+                    rokets.Isvisible = true;
                     boulder.Isvisible = true;
                     StartButton.Isvisible = false;
                     Bond.Isvisible = false;
@@ -364,6 +397,7 @@ namespace SkiingGame
                     flag.Isvisible = false;
                     GraphicsDevice.Clear(Color.Blue);
                     cheese.Isvisible = false;
+                    rokets.Isvisible = false;
                     boulder.Isvisible = false;
                     explosion.isvisible = false;
                     
@@ -377,6 +411,7 @@ namespace SkiingGame
                 if (keyboard.IsKeyDown(Keys.Escape))//Opens the Pause menu
                 {
                     cheese.Isvisible = false;
+                    rokets.Isvisible = false;
                     boulder.Isvisible = false;
                     skyMan.Isvisible = false;
                     flag.Isvisible = false;
@@ -386,7 +421,22 @@ namespace SkiingGame
                 
             }
 
-
+            if(currentGameState == (int)GameState.Win)
+            {
+                ResumeButton.Isvisible = true;
+                if (ResumeButton.IsPressed(mouse) == true)//gose back to game mode
+                {
+                    Save.Isvisible = false;
+                    Load.Isvisible = false;
+                    ResumeButton.Isvisible = false;
+                    BackToStartButton.Isvisible = false;
+                    cheese.Isvisible = true;
+                    rokets.Isvisible = false;
+                    boulder.Isvisible = true;
+                    gamefinished = true;
+                    currentGameState = (int)GameState.Game;
+                }
+            }
 
             if (currentGameState == (int)GameState.Pause)//menu for saving, loading and going back to main menu
             {
@@ -413,6 +463,7 @@ namespace SkiingGame
                     ResumeButton.Isvisible = false;
                     BackToStartButton.Isvisible = false;
                     cheese.Isvisible = true;
+                    rokets.Isvisible = false;
                     boulder.Isvisible = true;
                     currentGameState = (int)GameState.Game;
                 }
@@ -506,6 +557,7 @@ namespace SkiingGame
                 Letters[i].DrawWithAnimation(spriteBatch);
             }
             cheese.Draw(spriteBatch);
+            rokets.Draw(spriteBatch);
             boulder.Draw(spriteBatch);
             Bond.Draw(spriteBatch);
             Gameover.Draw(spriteBatch);

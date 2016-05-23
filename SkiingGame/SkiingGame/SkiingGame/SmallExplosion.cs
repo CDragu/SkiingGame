@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace SkiingGame
 {
-    class SmallExplosion : ParticleEmiter
+    public class SmallExplosion : ParticleEmiter
     {
         public SmallExplosion(Texture2D[] textures, Vector2 position, int maxparticles, int numberoftextures, int particleLife) : base(textures,position,maxparticles,numberoftextures,particleLife)
         {

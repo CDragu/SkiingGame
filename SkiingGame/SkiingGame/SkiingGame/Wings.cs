@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace SkiingGame
 {
@@ -14,7 +15,7 @@ namespace SkiingGame
         public int burstammount = 200;
         public override void Update()
         {
-            time += 0.16f;
+            time += 0.3f;
            
             for (int i = 0; i < maxparticles && oneburst == false; i+=5)//fills the list with particles
             {
@@ -30,7 +31,7 @@ namespace SkiingGame
                     break;
                 }
                
-                if (burstammount < 0)
+                if (burstammount < 120)
                     oneburst = true;
             }
 
@@ -51,14 +52,14 @@ namespace SkiingGame
         public Particle GenerateNewRightParticle(float time, Vector2 Position)
         {
             Texture2D texture = textureList[random.Next(numberoftextures)];
-            Vector2 position = Position;
-            Vector2 velocity = new Vector2(5, 1);
+            Vector2 position = Position + new Vector2(0, (float)Math.Sin(time) * 7);
+            Vector2 velocity = new Vector2(5, 3);
             float angle = 0;
             float angularVelocity = 0f;
             Color color = new Color(
                         255,
                         255,
-                        0);// generates a random red color to give variety to the exposion
+                        0);
             float size = 0.45f;
             int lifetime = particleLife;
 
@@ -68,14 +69,14 @@ namespace SkiingGame
         public Particle GenerateNewLeftParticle(float time, Vector2 Position)
         {
             Texture2D texture = textureList[random.Next(numberoftextures)];
-            Vector2 position = Position;
-            Vector2 velocity = new Vector2(-5, 1);
+            Vector2 position = Position + new Vector2(0,(float)Math.Sin(time)*7);
+            Vector2 velocity = new Vector2(-5, 3);
             float angle = 0;
             float angularVelocity = 0f;
             Color color = new Color(
                         255,
                         255,
-                        0);// generates a random red color to give variety to the exposion
+                        0);
             float size = 0.45f;
             int lifetime = particleLife;
 
@@ -86,6 +87,7 @@ namespace SkiingGame
         {
             this.oneburst = false;
             burstammount = 200;
+            time = 0;
         }
     }
 }

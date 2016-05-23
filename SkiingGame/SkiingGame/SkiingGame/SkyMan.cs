@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 
 namespace SkiingGame
 {
@@ -22,6 +23,10 @@ namespace SkiingGame
         public int WindowLenght;
         public Scraf trail;
         public Wings wing;
+        public SmallExplosion smallexplosion;
+        SoundEffect[] soundEffects;
+
+
 
         public struct ScoreInfo
         {
@@ -35,7 +40,7 @@ namespace SkiingGame
             set { isvisible = value; }
         }
        
-        public SkyMan(Vector2 position, float scale, Texture2D texture, float rotation, float transparency, PlayField field, int WindowHeight, int WindowLenght, Texture2D[] particles ) : base(position, scale, texture, rotation, transparency, field)
+        public SkyMan(Vector2 position, float scale, Texture2D texture, SoundEffect[] soundEffects, float rotation, float transparency, PlayField field, int WindowHeight, int WindowLenght, Texture2D[] particles ) : base(position, scale, texture, rotation, transparency, field)
         {
             this.Position = position;
             this.Scale = scale;
@@ -53,7 +58,11 @@ namespace SkiingGame
             trail = new Scraf(particles, this.Position, 400, 1, 50);// adds the particle system
             wing = new Wings(particles, this.Position, 200, 1, 5);
             wing.oneburst = true;
-        }
+            smallexplosion = new SmallExplosion(particles, this.Position, 100, 1, 20);
+            smallexplosion.oneburst = true;
+
+            this.soundEffects = soundEffects;
+          }
 
         public override void Update()
         {
@@ -113,6 +122,11 @@ namespace SkiingGame
             wing.Update();
             wing.position = Position + new Vector2(this.spriteWidth/5,this.spriteHeight/4);
             wing.isvisible = this.isvisible;
+            smallexplosion.Update();
+            smallexplosion.position = this.Position + new Vector2(0,40);
+            smallexplosion.isvisible = this.isvisible;
+            if (speed > 2)
+                speed-=0.16F;
                       
             SetSourceRect();
         }
@@ -127,7 +141,7 @@ namespace SkiingGame
                     this.score += 500;
                     Obj2.Position = new Vector2(+500, +500);
                     wing.reset();
-                    speed += 0.3f;
+                    speed += 2;
                     time++;
                 }
                 if (Obj2.type == "Boulder")//checks if it collide with a object named boulder
@@ -138,7 +152,14 @@ namespace SkiingGame
                 if (Obj2.type == "Flags")//checks if it collide with a object named flags
                 {
                     Hit();
-                }                
+                }
+                if (Obj2.type == "Rockets")//checks if it collide with a object named flags
+                {
+                    smallexplosion.reset();
+                    Obj2.Position = new Vector2(+500, +500);
+                    Hit();
+                    soundEffects[0].Play();
+                }
                 Obj2.HasBeenHit = true;//marks the object as hit
             }
         }
@@ -175,6 +196,7 @@ namespace SkiingGame
                 base.DrawWithAnimation(spriteBatch);
                 trail.Draw(spriteBatch);
                 wing.Draw(spriteBatch);
+                smallexplosion.Draw(spriteBatch);
             }
                 
         }
