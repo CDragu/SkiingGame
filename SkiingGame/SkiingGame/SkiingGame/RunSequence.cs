@@ -77,10 +77,13 @@ namespace SkiingGame
         Texture2D Bondtexture;
         Texture2D GameOvertexture;
         Texture2D Comicpage;
+        Texture2D Winscreen;
+        
 
         SmartSprite Bond;
         SmartSprite Gameover;
         SmartSprite ComicPage;
+        SmartSprite WinScreen;
         Buttons StartButton;
         Buttons ResumeButton;
         Buttons BackToStartButton;
@@ -144,13 +147,42 @@ namespace SkiingGame
             GameOvertexture = Content.Load<Texture2D>("GameOverScreen");
             particle = Content.Load<Texture2D>("SnowParticle");
             Comicpage = Content.Load<Texture2D>("Comic Strip");
+            Winscreen = Content.Load<Texture2D>("winscreen");
 
             //Sounds
             soundfile = TitleContainer.OpenStream(@"Content\Explosion2.wav");
             soundEffect = SoundEffect.FromStream(soundfile);
             soundEffectInstance = soundEffect.CreateInstance();
-            SoundEffect[] soundEffects = new SoundEffect[5];// add sounds that you want to use here and then you can use them in skyman
-            soundEffects[0] = soundEffect;
+            soundEffects = new SoundEffectInstance[8];// add sounds that you want to use here and then you can use them in skyman
+            soundEffects[0] = soundEffectInstance;
+            soundfile = TitleContainer.OpenStream(@"Content\Hit boulder.wav");
+            soundEffect = SoundEffect.FromStream(soundfile);
+            soundEffectInstance = soundEffect.CreateInstance();
+            soundEffects[1] = soundEffectInstance;
+            soundfile = TitleContainer.OpenStream(@"Content\Hit_flag.wav");
+            soundEffect = SoundEffect.FromStream(soundfile);
+            soundEffectInstance = soundEffect.CreateInstance();
+            soundEffects[2] = soundEffectInstance;
+            soundfile = TitleContainer.OpenStream(@"Content\Pickup_cheese.wav");
+            soundEffect = SoundEffect.FromStream(soundfile);
+            soundEffectInstance = soundEffect.CreateInstance();
+            soundEffects[3] = soundEffectInstance;
+            soundfile = TitleContainer.OpenStream(@"Content\MenuMusic.wav");
+            soundEffect = SoundEffect.FromStream(soundfile);
+            soundEffectInstance = soundEffect.CreateInstance();
+            soundEffects[4] = soundEffectInstance;
+            soundfile = TitleContainer.OpenStream(@"Content\PlayMusic.wav");
+            soundEffect = SoundEffect.FromStream(soundfile);
+            soundEffectInstance = soundEffect.CreateInstance();
+            soundEffects[5] = soundEffectInstance;
+            soundfile = TitleContainer.OpenStream(@"Content\Select.wav");
+            soundEffect = SoundEffect.FromStream(soundfile);
+            soundEffectInstance = soundEffect.CreateInstance();
+            soundEffects[6] = soundEffectInstance;
+            soundfile = TitleContainer.OpenStream(@"Content\Win Sound.wav");
+            soundEffect = SoundEffect.FromStream(soundfile);
+            soundEffectInstance = soundEffect.CreateInstance();
+            soundEffects[7] = soundEffectInstance;
 
             //Initializing game objects
             screenHeight = GraphicsDevice.Viewport.Height;
@@ -175,7 +207,7 @@ namespace SkiingGame
             Bond = new SmartSprite(new Vector2(55, 90), 0.75f, Bondtexture, 0, 1, field);
             Gameover = new SmartSprite(new Vector2(-5,-50), 1, GameOvertexture, 0, 1, field);
             ComicPage = new SmartSprite(new Vector2(0, 0), 1, Comicpage, 0, 1, field);
-
+            WinScreen = new SmartSprite(new Vector2(0, 0), 1, Winscreen, 0, 1, field);
 
           
 
@@ -233,7 +265,7 @@ namespace SkiingGame
                 //smallexplosion.isvisible = true;
                 //smallexplosion.Update();
 
-
+                soundEffects[4].Play();
                 Bond.Isvisible = true;
                 GraphicsDevice.Clear(Color.Black);
                 StartButton.Isvisible = true;
@@ -243,6 +275,7 @@ namespace SkiingGame
                     ComicPage.Isvisible = true;
                     StartButton.Isvisible = false;
                     SkipComic.Isvisible = true;
+                    soundEffects[6].Play();
                     currentGameState = (int)GameState.Comic;
                     Debug.Write("yes");
                 } else if (timer > 50)//go to Attract mode
@@ -255,6 +288,7 @@ namespace SkiingGame
                     boulder.Reset();
                     cheese.Reset();
                     rokets.Reset();
+                    timetillwin = 0;
                     StartButton.Isvisible = false;
                     flag.Isvisible = true;
                     skyMan.Isvisible = true;
@@ -287,6 +321,9 @@ namespace SkiingGame
                     ComicPage.Isvisible = false;
                     SkipComic.Isvisible = false;
                     currentGameState = (int)GameState.Game;
+                    soundEffects[6].Play();
+                    soundEffects[4].Stop();
+                    soundEffects[5].Play();
                     SaveLoad save = new SaveLoad(field, "SAVE", Scores, skyMan.scoreInfo);
                 }
             }
@@ -305,6 +342,7 @@ namespace SkiingGame
                     flag.atractmode = false;
                     skyMan.Isvisible = false;
                     StartButton.Isvisible = true;
+                    soundEffects[6].Play();
                 }
 
             }
@@ -312,6 +350,8 @@ namespace SkiingGame
 
             if (currentGameState == (int)GameState.Game)//The Main Loop for the Gameplay
             {
+                rokets.Isvisible = true;
+                soundEffects[5].Play();
                 timetillwin += 0.16f;
                 flag.Isvisible = true;
                 skyMan.Isvisible = true;
@@ -333,6 +373,7 @@ namespace SkiingGame
                     skyMan.Isvisible = false;
                     flag.Isvisible = false;
                     explosion.isvisible = false;
+                    soundEffects[7].Play();
                     currentGameState = (int)GameState.Win;
                 }
                 
@@ -416,6 +457,8 @@ namespace SkiingGame
                     skyMan.Isvisible = false;
                     flag.Isvisible = false;
                     explosion.isvisible = false;
+                    soundEffects[5].Stop();
+                    soundEffects[6].Play();
                     currentGameState = (int)GameState.Pause;
                 }
                 
@@ -423,6 +466,7 @@ namespace SkiingGame
 
             if(currentGameState == (int)GameState.Win)
             {
+                WinScreen.Isvisible = true;
                 ResumeButton.Isvisible = true;
                 if (ResumeButton.IsPressed(mouse) == true)//gose back to game mode
                 {
@@ -434,6 +478,8 @@ namespace SkiingGame
                     rokets.Isvisible = false;
                     boulder.Isvisible = true;
                     gamefinished = true;
+                    soundEffects[6].Play();
+                    WinScreen.Isvisible = false;
                     currentGameState = (int)GameState.Game;
                 }
             }
@@ -447,9 +493,11 @@ namespace SkiingGame
                 if (Save.IsPressed(mouse) == true)//save
                 {
                     SaveLoad save = new SaveLoad(field, "SAVE", Scores, skyMan.scoreInfo);
+                    soundEffects[6].Play();
                 }
                 if (Load.IsPressed(mouse) == true)//load
                 {
+                    soundEffects[6].Play();
                     SaveLoad load = new SaveLoad(field, "LOAD",Scores, skyMan.scoreInfo);
                     field = load.AfterLoad();
                     skyMan.scoreInfo = load.ReturnSkyMan();
@@ -458,6 +506,7 @@ namespace SkiingGame
                 }
                 if (ResumeButton.IsPressed(mouse) == true)//gose back to game mode
                 {
+                    soundEffects[6].Play();
                     Save.Isvisible = false;
                     Load.Isvisible = false;
                     ResumeButton.Isvisible = false;
@@ -465,14 +514,17 @@ namespace SkiingGame
                     cheese.Isvisible = true;
                     rokets.Isvisible = false;
                     boulder.Isvisible = true;
+                    soundEffects[5].Play();
                     currentGameState = (int)GameState.Game;
                 }
                 if (BackToStartButton.IsPressed(mouse) == true)//back to main menu
                 {
+                    soundEffects[6].Play();
                     Save.Isvisible = false;
                     Load.Isvisible = false;
                     ResumeButton.Isvisible = false;
                     BackToStartButton.Isvisible = false;
+                    soundEffects[4].Play();
                     currentGameState = (int)GameState.Start;
                     timer = 0;
                 }
@@ -491,14 +543,20 @@ namespace SkiingGame
                 if ( keyboard.IsKeyDown(Keys.S) && (!keyboard.Equals(Oldkeyboard)))//previous letter
                 {
                    Letters[count].Up();
+                    soundEffects[6].Stop();
+                    soundEffects[6].Play();
                 }
                 if ( keyboard.IsKeyDown(Keys.W) && (!keyboard.Equals(Oldkeyboard)))//next letter
                 {
-                    Letters[count].Down();                  
+                    Letters[count].Down();
+                    soundEffects[6].Stop();
+                    soundEffects[6].Play();
                 }
                 if (keyboard.IsKeyDown(Keys.Enter) && (!keyboard.Equals(Oldkeyboard)))//used to go from the first dail to the next one
                 {
                     count++;
+                    soundEffects[6].Stop();
+                    soundEffects[6].Play();
                 }
                 
 
@@ -508,7 +566,8 @@ namespace SkiingGame
                     flag.Reset(field);
                     
                     count = 0;
-                    
+                    soundEffects[5].Stop();
+                    soundEffects[4].Play();
                     currentGameState = (int)GameState.Atract;
                     Gameover.Isvisible = false;
                     flag.Isvisible = true;
@@ -567,6 +626,7 @@ namespace SkiingGame
             ComicPage.Draw(spriteBatch);
             SkipComic.Draw(spriteBatch);
             smallexplosion.Draw(spriteBatch);
+            WinScreen.Draw(spriteBatch);
 
             spriteBatch.End();
             base.Draw(gameTime);

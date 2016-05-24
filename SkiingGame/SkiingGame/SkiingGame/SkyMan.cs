@@ -24,7 +24,7 @@ namespace SkiingGame
         public Scraf trail;
         public Wings wing;
         public SmallExplosion smallexplosion;
-        SoundEffect[] soundEffects;
+        SoundEffectInstance[] soundEffects;
 
 
 
@@ -40,7 +40,7 @@ namespace SkiingGame
             set { isvisible = value; }
         }
        
-        public SkyMan(Vector2 position, float scale, Texture2D texture, SoundEffect[] soundEffects, float rotation, float transparency, PlayField field, int WindowHeight, int WindowLenght, Texture2D[] particles ) : base(position, scale, texture, rotation, transparency, field)
+        public SkyMan(Vector2 position, float scale, Texture2D texture, SoundEffectInstance[] soundEffects, float rotation, float transparency, PlayField field, int WindowHeight, int WindowLenght, Texture2D[] particles ) : base(position, scale, texture, rotation, transparency, field)
         {
             this.Position = position;
             this.Scale = scale;
@@ -143,15 +143,18 @@ namespace SkiingGame
                     wing.reset();
                     speed += 2;
                     time++;
+                    soundEffects[3].Play();
                 }
                 if (Obj2.type == "Boulder")//checks if it collide with a object named boulder
                 {
                     Hit();
                     Obj2.Position = new Vector2(+500, +500);
+                    soundEffects[1].Play();
                 }
                 if (Obj2.type == "Flags")//checks if it collide with a object named flags
                 {
                     Hit();
+                    soundEffects[2].Play();
                 }
                 if (Obj2.type == "Rockets")//checks if it collide with a object named flags
                 {
@@ -219,6 +222,8 @@ namespace SkiingGame
             SetSourceRect();
             trail.position = Position + new Vector2(12, 12);
             trail.Update();
+            wing.isvisible = false;
+            smallexplosion.isvisible = false;
 
         }
         public void Reset()//resets the position, score and name of the player
